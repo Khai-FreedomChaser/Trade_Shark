@@ -23,13 +23,13 @@ Mọi luồng số liệu phức tạp sau đó được bọc gọn trong một
 
 ```text
 TradeShark/
-├── FrontEnd/
+├── frontend/
 │   ├── public/
 │   ├── src/
 │   ├── package.json
 │   └── vite.config.js
 │
-├── Backend/
+├── backend/
 │   ├── server.js
 │   └── package.json
 │
@@ -42,12 +42,12 @@ TradeShark/
 ### Frontend
 
 ```bash
-cd FrontEnd
+cd frontend
 npm run dev
 ```
 ### Backend
 
 ```bash
-cd Backend
+cd backend
 npm run dev
 ```
