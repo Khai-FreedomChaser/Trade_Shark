@@ -1,4 +1,4 @@
-const stockService = require("../service/stock.service");
+const stockService = require("../../service/stock");
 
 async function createStock(req, res) {
   try {
@@ -15,7 +15,7 @@ async function createStock(req, res) {
 
 async function getAllStocks(req, res) {
   try {
-    const stocks = await stockService.getAl~lStocks();
+    const stocks = await stockService.getAllStocks();
 
     res.status(200).json(stocks);
   } catch (error) {

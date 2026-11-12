@@ -4,29 +4,18 @@ require("dotenv").config();
 
 const app = express();
 const PORT = 3636;
-const connectDB = require("./db");
-// const controller = require("./controller");
-// const service= require("./service");
-// const middleware = require("./middleware");
-const stockRoutes = require("./routes/stock.routes");
 
+require("./db")
+  .initialize()
+  .then(() => console.log("Successfully connected to the database"))
+  .catch(err => console.error("Error connecting to the database", err));
 
 app.use(cors());
 app.use(express.json());
-// app.use(connectDB);
-// app.use(controller);
-// app.use(service);
-// app.use(middleware);
-// app.use(stockRoutes);
+app.use(express.urlencoded({ extended: true }));
 
 
-app.get("/api/health", (req, res) => {
-  res.json({
-    message: "Backend is running"
-  });
-});
-
-app.use("/api/stocks", stockRoutes);
+app.use(require("./routes"));
 
 app.listen(PORT, () => {
   console.log(`Backend running at http://localhost:${PORT}`);

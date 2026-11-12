@@ -1,14 +1,9 @@
-const dataSource = require("../db");
-
-function getStockRepository() {
-  return dataSource.getRepository("Stock");
-}
+const datasource = require("../../db/data-source");
 
 async function createStock(data) {
-  const repository = getStockRepository();
-  const stock = repository.create(data);
+  const stock = getStockRepository().create(data);
 
-  return repository.save(stock);
+  return getStockRepository().save(stock);
 }
 
 async function getAllStocks() {
@@ -36,6 +31,10 @@ async function deleteStock(id) {
   return getStockRepository().delete({
     id: Number(id)
   });
+}
+
+async function getStockRepository() {
+  return datasource.getRepository("stocks");
 }
 
 module.exports = {

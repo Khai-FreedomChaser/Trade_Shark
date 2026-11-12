@@ -3,18 +3,17 @@ const { EntitySchema } = require("typeorm");
 module.exports = new EntitySchema({
   name: "Stock",
   tableName: "stocks",
-
   columns: {
     id: {
-      primary: true,
-      type: "int",
-      generated: true
+      type: "varchar",
+      length: 20,
+      primary: true
     },
 
     symbol: {
       type: "varchar",
       length: 20,
-      unique: true
+      unique: true,
     },
 
     companyName: {
@@ -26,6 +25,11 @@ module.exports = new EntitySchema({
       type: "decimal",
       precision: 10,
       scale: 2
+    },
+
+    updatedAt: {
+      type: "datetime",
+      updateDate: true
     }
   }
-});
+})
