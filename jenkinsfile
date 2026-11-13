@@ -25,9 +25,10 @@ pipeline {
     stage('Run API tests') {
       steps {
         sh '''
-          postman collection run "postman/collections/Trade_Shark_API" \
-            --environment "postman/environments/Local.environment.yaml" \
-            --env-var "base_url=http://host.docker.internal:3636"
+            export PATH="$HOME/.local/bin:$PATH"
+            postman collection run "postman/collections/Trade_Shark_API" \
+                --environment "postman/environments/Local.environment.yaml" \
+                --env-var "base_url=http://host.docker.internal:3636"
         '''
       }
     }
