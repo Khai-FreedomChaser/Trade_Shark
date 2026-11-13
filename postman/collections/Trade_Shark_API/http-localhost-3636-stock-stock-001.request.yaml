@@ -1,7 +1,7 @@
 $kind: http-request
-name: http://localhost:3636/stock/stock-001
+name: Get by ID
 description: ""
-url: http://localhost:3636/stock/stock-001
+url: "{{base_url}}/stock/stock-001"
 method: GET
 scripts:
   - type: beforeRequest
