@@ -1,0 +1,35 @@
+pipeline {
+  agent any
+
+  tools {
+    // Thay bằng đúng tên NodeJS installation đã cấu hình trong Jenkins
+    nodejs 'Node24'
+  }
+
+  stages {
+    stage('Build frontend') {
+      steps {
+        dir('frontend') {
+          sh 'npm ci'
+          sh 'npm run build'
+        }
+      }
+    }
+
+    stage('Install Postman CLI') {
+      steps {
+        sh 'curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh'
+      }
+    }
+
+    stage('Run API tests') {
+      steps {
+        sh '''
+          postman collection run "postman/collections/Trade_Shark_API" \
+            --environment "postman/environments/Local.environment.yaml" \
+            --env-var "base_url=http://host.docker.internal:3636"
+        '''
+      }
+    }
+  }
+}
