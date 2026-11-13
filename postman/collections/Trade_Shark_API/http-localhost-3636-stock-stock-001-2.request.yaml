@@ -1,0 +1,14 @@
+$kind: http-request
+name: http://localhost:3636/stock/stock-001
+description: ""
+url: http://localhost:3636/stock/stock-001
+method: DELETE
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Xóa stock thành công\", function () {\r
+
+      \  pm.response.to.have.status(200);\r
+
+      });"
+    language: text/javascript
+order: 5000

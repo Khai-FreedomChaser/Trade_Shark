@@ -12,7 +12,7 @@ async function getAllStocks() {
 
 async function getStockById(id) {
   return getStockRepository().findOneBy({
-    id: Number(id)
+    id
   });
 }
 
@@ -20,7 +20,7 @@ async function updateStock(id, data) {
   const repository = getStockRepository();
 
   await repository.update(
-    { id: Number(id) },
+    { id },
     data
   );
 
@@ -29,12 +29,12 @@ async function updateStock(id, data) {
 
 async function deleteStock(id) {
   return getStockRepository().delete({
-    id: Number(id)
+    id
   });
 }
 
-async function getStockRepository() {
-  return datasource.getRepository("stocks");
+function getStockRepository() {
+  return datasource.getRepository("Stock");
 }
 
 module.exports = {

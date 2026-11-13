@@ -1,0 +1,20 @@
+$kind: http-request
+name: http://localhost:3636/stock/stock-001
+description: ""
+url: http://localhost:3636/stock/stock-001
+method: PUT
+body:
+  type: json
+  content: "{\r\n    \"price\": \"75000\"\r\n}"
+scripts:
+  - type: beforeRequest
+    code: ""
+    language: text/javascript
+  - type: afterResponse
+    code: "pm.test(\"Cập nhật stock thành công\", function () {\r
+
+      \  pm.response.to.have.status(200);\r
+
+      });"
+    language: text/javascript
+order: 4000
