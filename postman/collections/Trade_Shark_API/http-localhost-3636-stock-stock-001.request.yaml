@@ -1,0 +1,19 @@
+$kind: http-request
+name: http://localhost:3636/stock/stock-001
+description: ""
+url: http://localhost:3636/stock/stock-001
+method: GET
+scripts:
+  - type: beforeRequest
+    code: ""
+    language: text/javascript
+  - type: afterResponse
+    code: "pm.test(\"Tìm được stock theo ID\", function () {\r
+
+      \  pm.response.to.have.status(200);\r
+
+      \  pm.expect(pm.response.json().id).to.eql(\"stock-001\");\r
+
+      });"
+    language: text/javascript
+order: 3000

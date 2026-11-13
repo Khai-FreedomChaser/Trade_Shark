@@ -1,0 +1,19 @@
+$kind: http-request
+name: http://localhost:3636/stock
+description: ""
+url: http://localhost:3636/stock
+method: GET
+scripts:
+  - type: beforeRequest
+    code: ""
+    language: text/javascript
+  - type: afterResponse
+    code: "pm.test(\"Lấy danh sách stock thành công\", function () {\r
+
+      \  pm.response.to.have.status(200);\r
+
+      \  pm.expect(pm.response.json()).to.be.an(\"array\");\r
+
+      });"
+    language: text/javascript
+order: 2000
