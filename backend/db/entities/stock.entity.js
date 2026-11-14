@@ -18,18 +18,47 @@ module.exports = new EntitySchema({
 
     companyName: {
       type: "varchar",
-      length: 100
+      length: 100,
     },
 
-    price: {
+    refPrice: {
       type: "decimal",
-      precision: 10,
-      scale: 2
+      precision: 15,
+      scale: 2,
     },
 
-    updatedAt: {
+    market: {
+      type: "varchar",
+      length: 10,
+    },
+
+    createdAt: {
       type: "datetime",
-      updateDate: true
+    }
+  },
+  relations: {
+    stockUsers: {
+      type: "one-to-many",
+      target: "StockUser",
+      inverseSide: "stock"
+    },
+
+    balanceHistories: {
+      type: "one-to-many",
+      target: "BalanceHistory",
+      inverseSide: "stock"
+    },
+
+    stockAlerts: {
+      type: "one-to-many",
+      target: "StockAlert",
+      inverseSide: "stock"
+    },
+
+    stockSnapshots: {
+      type: "one-to-many",
+      target: "StockSnapshot",
+      inverseSide: "stock"
     }
   }
 })
