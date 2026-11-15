@@ -129,9 +129,9 @@ function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
 }
 
+// Quy ước: chỉ export phần controller/routes thực sự gọi (runBenchmark,
+// getBenchmarkLogs). Dataset và danh sách pattern là chi tiết nội bộ.
 module.exports = {
-  PATTERNS,
   runBenchmark,
-  getBenchmarkLogs,
-  generateDataset
+  getBenchmarkLogs
 };

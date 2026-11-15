@@ -1,7 +1,7 @@
 const marketState = require("./market-state");
 
 /**
- * MARKET DATA SIMULATOR (skeleton chạy được — Backend 1 sở hữu và tinh chỉnh).
+ * MARKET DATA SIMULATOR (skeleton chạy được — BE1).
  *
  * Random Walk: mỗi tick, giá mới = giá cũ * (1 + drift), với drift ngẫu nhiên
  * trong khoảng ±SIM_VOLATILITY. Giá được làm tròn theo bước 100 VND và bị chặn

@@ -2,7 +2,7 @@ const marketState = require("./market-state");
 const { genId } = require("../../utils/id");
 
 /**
- * SNAPSHOT WRITER (skeleton — Backend 1 sở hữu).
+ * SNAPSHOT WRITER (skeleton — BE1).
  *
  * Cầu nối duy nhất giữa RAM và DB theo đúng thiết kế của đề tài:
  *  - Lắng nghe tick từ marketState, tổng hợp min/max/open/close theo cửa sổ thời gian.

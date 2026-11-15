@@ -14,14 +14,13 @@ import { formatPrice } from "../config";
 import "./detail.css";
 
 /**
- * CHI TIẾT MÃ CỔ PHIẾU — khung cho FE1 hoàn thiện (xem issue).
+ * CHI TIẾT MÃ CỔ PHIẾU — FE1.
  *
  * Luồng dữ liệu đúng theo contract:
  *   1. symbol từ URL -> /api/market/state/:symbol lấy giá hiện tại (RAM)
  *   2. stockId từ đó -> /api/stock/:stockId/snapshots lấy chuỗi min/max/close (DB)
- *
- * TODO(FE1): API snapshots do Backend 1 viết — lúc chưa có sẽ hiện thông báo
- * mờ dần (state "api-chưa-sẵn"), không cần sửa gì ở đây sau khi BE1 xong.
+ *   3. Dữ liệu từ DB được sử dụng để vẽ biểu đồ biến động giá cổ phiếu trong phiên.
+ *   4. Khi API chưa sẵn sàng, sẽ hiển thị thông báo (state "api-chưa-sẵn"), không cần sửa gì ở đây sau khi BE1 xong.
  */
 export default function StockDetailPage() {
   const { symbol } = useParams();

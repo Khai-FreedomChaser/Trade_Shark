@@ -95,7 +95,6 @@ function onTick(handler) {
 }
 
 module.exports = {
-  bandFromRef,
   initFromDatabase,
   tick,
   get,

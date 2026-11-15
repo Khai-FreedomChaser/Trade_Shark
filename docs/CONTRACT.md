@@ -25,13 +25,13 @@
 
 ## 3. REST Endpoints
 
-### 3.1 Market — trạng thái RAM (`routes/market`) — *sở hữu: Backend 1*
+### 3.1 Market — trạng thái RAM (`routes/market`) — *BE1*
 | Method | Path | Mô tả |
 | --- | --- | --- |
 | GET | `/api/market/state` | Toàn bộ trạng thái hiện tại (bootstrap bảng điện) → `{ count, data: [TickPayload...] }` |
 | GET | `/api/market/state/:symbol` | Trạng thái 1 mã, 404 nếu không có |
 
-### 3.2 Stock — master data DB (`routes/stock`) — *sở hữu: Backend 1*
+### 3.2 Stock — master data DB (`routes/stock`) — *BE1*
 | Method | Path | Mô tả |
 | --- | --- | --- |
 | GET | `/api/stock` | Danh sách mã (đã có) |
@@ -41,7 +41,7 @@
 
 > Lưu ý: `Stock` nhận diện bằng `id` (varchar 20), không phải `symbol`.
 
-### 3.3 Benchmark (`routes/benchmark`) — *sở hữu: Full-stack (Lead)*
+### 3.3 Benchmark (`routes/benchmark`) — *Fullstack*
 | Method | Path | Mô tả |
 | --- | --- | --- |
 | POST | `/api/benchmark/run` | Body `{ "size": 100000, "pattern": "random", "runs": 3 }` → `201` + log + `detail` |
@@ -60,7 +60,7 @@ Response `POST /run` (case khớp cột `benchmark_logs`):
 }
 ```
 
-### 3.4 User & Giao dịch (`routes/user`) — *sở hữu: Backend 2* (chưa viết)
+### 3.4 User & Giao dịch (`routes/user`) — *BE2* (chưa viết)
 Đề xuất (chốt lại nếu muốn đổi):
 | Method | Path | Mô tả |
 | --- | --- | --- |
@@ -94,7 +94,7 @@ Response `POST /run` (case khớp cột `benchmark_logs`):
   "price": 92500, "kind": "max", "message": "VCB vượt ngưỡng trên 92.000", "timestamp": 1731... } }
 ```
 
-### TickPayload (schema chốt cứng — FE 1 code chống đây)
+### TickPayload (schema chốt cứng)
 ```jsonc
 {
   "symbol": "VCB",     // string
@@ -123,10 +123,10 @@ Quy ước tô màu bảng điện: `price > refPrice` xanh, `price < refPrice` 
 Simulator (BE1, random walk)
       │  gọi marketState.tick(symbol, price)
       ▼
-marketState (RAM, service/market/market-state.js)  ← NGUỒN SỰ THẬT PHIÊN
+marketState (RAM, service/market/market-state.js)  ← NGUỒN SỰ THẬT CỦA PHIÊN
       │  emit "tick"
       ├──▶ ws/index.js ──batch 500ms──▶ {type:"ticks"} → Bảng điện (FE1)
-      ├──▶ alert listener (BE2 tự viết) ──▶ ws.broadcastAlert() → FE2 (Toast)
+      ├──▶ alert listener (BE2 tự viết) ──▶ ws.broadcastAlert() → FE2  (Toast)
       └──▶ snapshot-writer ──batch 60s──▶ DB.stock_snapshots → Biểu đồ mã (FE1)
 ```
 
@@ -137,10 +137,10 @@ marketState (RAM, service/market/market-state.js)  ← NGUỒN SỰ THẬT PHIÊ
 
 | Bảng | Người ghi |
 | --- | --- |
-| `stocks` | Seed script (lead) — Backend 1 chỉ đọc |
-| `stock_snapshots` | Backend 1 (snapshot-writer) |
+| `stocks` | Seed script (lead) — BE1 chỉ đọc |
+| `stock_snapshots` | BE1 (snapshot-writer) |
 | `benchmark_logs` | Lead (module benchmark) |
-| `users`, `balance_history`, `stock_users`, `stock_alerts` | Backend 2 |
+| `users`, `balance_history`, `stock_users`, `stock_alerts` | BE2 |
 | Frontend gọi REST + WS theo đúng contract này, không tự đoán field |
 
 ## 7. Cấu hình (.env — backend/.env)

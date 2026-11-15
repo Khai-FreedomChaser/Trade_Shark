@@ -66,3 +66,10 @@ cd frontend
 npm install
 npm run dev
 ```
+
+### 4. Phân chia công việc
+Bảo - Fullstack
+Nguyệt - BE1
+Khải - BE2
+Quang Anh - FE1
+Mạnh - FE2

@@ -53,7 +53,7 @@ function safeSend(socket, frame) {
 function attachWsServer(httpServer) {
   wss = new WebSocketServer({ server: httpServer, path: "/ws" });
 
-  // Lắng nghe luồng tick từ RAM: chỉ đánh dấu "bẩn", thật sự gửi theo chu kỳ.
+  // Lắng nghe luồng tick từ RAM: chỉ đánh dấu "dirty", thật sự gửi theo chu kỳ.
   unsubTick = marketState.onTick((state) => dirty.add(state.symbol));
 
   setInterval(() => {

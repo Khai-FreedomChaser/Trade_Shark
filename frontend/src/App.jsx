@@ -8,8 +8,8 @@ import "./App.css";
 
 /**
  * Router gốc. Phân chia trang theo issue:
- *   - BoardPage + StockDetailPage: Frontend 1
- *   - PortfolioPage (+ /login, /trade... FE2 tự thêm route vào đây): Frontend 2
+ *   - BoardPage + StockDetailPage: FE 1
+ *   - PortfolioPage (+ /login, /trade... FE2 tự thêm route vào đây): FE 2
  *   - BenchmarkPage: Lead (đã hoàn thành)
  */
 export default function App() {

@@ -4,6 +4,4 @@ function getUserRepository() {
   return datasource.getRepository("User");
 }
 
-module.exports = {
-  getUserRepository
-};
+module.exports = {};

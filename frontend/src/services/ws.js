@@ -1,8 +1,6 @@
 import { WS_URL } from "../config";
 
 /**
- * WEBSOCKET CLIENT dùng chung (protocol: docs/CONTRACT.md mục 4).
- *
  * Cách dùng trong component:
  *   useEffect(() => {
  *     ws.connect();

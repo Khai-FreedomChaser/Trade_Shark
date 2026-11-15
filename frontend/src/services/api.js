@@ -1,10 +1,5 @@
 import { API_URL } from "../config";
 
-/**
- * REST client dùng chung — response và lỗi theo docs/CONTRACT.md mục 2:
- * lỗi trả về { message, error }. Backend 2 thêm Authorization header khi có JWT.
- */
-
 async function request(path, options = {}) {
   const res = await fetch(`${API_URL}${path}`, {
     headers: { "Content-Type": "application/json", ...options.headers },

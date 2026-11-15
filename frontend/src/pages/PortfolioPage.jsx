@@ -3,10 +3,9 @@ import { api } from "../services/api";
 import "./portfolio.css";
 
 /**
- * DANH MỤC & GIAO DỊCH — khung cho FE2 hoàn thiện (xem issue).
+ * DANH MỤC & GIAO DỊCH — FE2
  *
  * Chưa có auth nên trang này chỉ là placeholder có cấu trúc sẵn.
- * FE2 làm theo docs/CONTRACT.md mục 3.4:
  *   TODO(FE2-1): Đăng nhập -> lưu accessToken/refreshToken (localStorage)
  *   TODO(FE2-2): GET /api/user/portfolio -> danh mục + lãi/lỗ tạm tính
  *                (giá hiện tại lấy từ ws frame "ticks" theo symbol)
