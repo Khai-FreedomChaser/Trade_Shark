@@ -23,20 +23,20 @@ src/
 ├── components/
 │   └── Layout.jsx     # Navbar + đèn LIVE/MẤT KẾT NỐI (đừng đổi khi chưa thống nhất)
 └── pages/
-    ├── BoardPage.jsx        # FE1: bảng điện (khung chạy được, issue bên trong file)
-    ├── StockDetailPage.jsx  # FE1: chi tiết mã + biểu đồ min/max/close
-    ├── BenchmarkPage.jsx    # Lead: HOÀN THÀNH — benchmark đối chiếu 2 thuật toán
-    └── PortfolioPage.jsx    # FE2: danh mục/giao dịch/cảnh báo (placeholder)
+    ├── board/               # FE1 (Quang Anh): bảng điện — khung chạy được + 4 TODO trong file
+    ├── stock-detail/        # FE1 (Quang Anh): chi tiết mã + biểu đồ min/max/close
+    ├── benchmark/           # Lead (Bảo): HOÀN THÀNH — đối chiếu 2 thuật toán
+    └── portfolio/           # FE2 (Mạnh): danh mục/giao dịch/cảnh báo (placeholder + 6 TODO)
 ```
 
 ## Ai làm gì (map với issue)
 
 | Trang | Người | Trạng thái |
 | --- | --- | --- |
-| `BoardPage` | FE1 | Khung chạy được + 4 TODO trong file (highlight trần/sàn, sort, tối ưu render, toast alert) |
-| `StockDetailPage` | FE1 | Khung sẵn — tự "sáng" khi Backend 1 xong API snapshots |
-| `BenchmarkPage` | Lead | ✅ Hoàn thành (controls + 2 biểu đồ + bảng lịch sử) |
-| `PortfolioPage` + auth | FE2 | Placeholder + 6 TODO trong file |
+| `BoardPage` | FE1 — Quang Anh | Khung chạy được + 4 TODO trong file (highlight trần/sàn, sort, tối ưu render, toast alert) |
+| `StockDetailPage` | FE1 — Quang Anh | Khung sẵn — tự "sáng" khi Backend 1 (Nguyệt) xong API snapshots |
+| `BenchmarkPage` | Lead — Bảo | Hoàn thành (controls + 2 biểu đồ + bảng lịch sử) |
+| `PortfolioPage` + auth | FE2 — Mạnh | Placeholder + 6 TODO trong file |
 
 ## Quy tắc bắt buộc
 

@@ -14,26 +14,34 @@ Giữa đại dương mã chứng khoán khổng lồ, **Trade Shark** là bản
 Mọi luồng số liệu phức tạp sau đó được bọc gọn trong một giao diện trực quan, mượt mà. Trade Shark mang đến trải nghiệm theo dõi thị trường nhanh, chính xác và hoàn toàn không có một động tác thừa.
 ## Công nghệ sử dụng
 
-- Frontend: React + Vite
-- Backend: Node.js + Express
-
-## Cấu trúc project
+- Frontend: React 19 + Vite + React Router + Recharts
+- Backend: Node.js + Express + WebSocket (ws) + TypeORM + MySQL
 
 ## Cấu trúc dự án
 
 ```text
 TradeShark/
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   ├── package.json
-│   └── vite.config.js
+├── docs/
+│   └── CONTRACT.md        # API + WebSocket contract — NGUỒN SỰ THẬT của cả nhóm
 │
 ├── backend/
-│   ├── server.js
+│   ├── server.js          # entry: REST /api + WS /ws + simulator + snapshot writer
+│   ├── routes/            # market | stock | user(~BE2) | benchmark
+│   ├── controller/
+│   ├── service/
+│   │   ├── market/        # marketState (RAM) + simulator + snapshot-writer (~BE1)
+│   │   ├── user/          # auth, trade, alerts (~BE2)
+│   │   └── benchmark/     # 2 thuật toán min-max + đo CPU (~Bảo)
+│   ├── ws/                # WS server: broadcast ticks + broadcastAlert (hook BE2)
+│   ├── db/                # entities + migrations (TypeORM + MySQL)
+│   ├── scripts/           # seed-stocks | db-reset | migration-generate
 │   └── package.json
 │
-├── .gitignore
+├── frontend/
+│   ├── src/pages/         # BoardPage(FE1) | StockDetailPage(FE1) | BenchmarkPage(Bảo) | PortfolioPage(FE2)
+│   ├── src/services/      # api.js + ws.js dùng chung — đừng tự tạo client riêng
+│   └── package.json
+│
 └── README.md
 ```
 
@@ -68,8 +76,16 @@ npm run dev
 ```
 
 ### 4. Phân chia công việc
-Bảo - Fullstack
-Nguyệt - BE1
-Khải - BE2
-Quang Anh - FE1
-Mạnh - FE2
+
+| Thành viên | Vai trò | Sở hữu chính | Nhánh |
+| --- | --- | --- | --- |
+| **Bảo** | Fullstack (Lead) | Kiến trúc, `docs/CONTRACT.md`, module Benchmark (BE+FE), review | `feat/benchmark` |
+| **Nguyệt** | Backend 1 | `service/market` (simulator, snapshot-writer), `GET /api/stock/:id/snapshots`, luồng tick qua WS | `feat/simulator-ws` |
+| **Khải** | Backend 2 | `routes/user` (auth, error, trade, alerts), alert listener: `marketState.onTick` → `ws.broadcastAlert` | `feat/user-trading` |
+| **Quang Anh** | Frontend 1 | `BoardPage` (bảng điện real-time), `StockDetailPage` (biểu đồ mã) | `feat/ui-board` |
+| **Mạnh** | Frontend 2 | `PortfolioPage` (danh mục, mua/bán), auth UI, cài ngưỡng + toast | `feat/ui-portfolio` |
+
+**Quy tắc phối hợp:**
+- Mỗi người làm trên nhánh của mình, checkout từ `main`.
+- Payload/endpoint phải khớp `docs/CONTRACT.md` — muốn đổi gì thì sửa contract TRƯỚC rồi hẵng code.
+- File của người khác chỉ đọc; cần sửa thì thống nhất trước. Chỗ cần hoàn thiện được đánh dấu sẵn bằng comment `// TODO: ... ~ <vai>` trong từng file.

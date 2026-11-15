@@ -9,6 +9,7 @@ const { genId } = require("../../utils/id");
  *  - Mỗi SNAPSHOT_INTERVAL_MS, batch INSERT vào bảng stock_snapshots rồi reset cửa sổ.
  * => 3.000 mã chỉ tốn ~3.000 row / phút thay vì hàng nghìn row/giây.
  */
+// TODO: Bắt SIGINT/SIGTERM để gọi flush() lần cuối trước khi thoát — tránh mất dữ liệu 60s cuối phiên ~ BE1
 const SNAPSHOT_INTERVAL_MS = Number(process.env.SNAPSHOT_INTERVAL_MS) || 60_000;
 
 // symbol -> { open, min, max, close, ticked }

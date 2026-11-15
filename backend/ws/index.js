@@ -117,6 +117,8 @@ function attachWsServer(httpServer) {
  * Điểm gắn cho Backend 2: listener alert gọi hàm này để bắn sự kiện
  * chạm ngưỡng tới TẤT CẢ client. Payload tự do nhưng khuyến nghị:
  * { userId, symbol, price, kind: "min" | "max", message, timestamp }
+ *
+ * TODO: Viết alert listener — dò alertMin/alertMax trong DB, nghe marketState.onTick, gọi broadcastAlert khi chạm ngưỡng ~ BE2
  */
 function broadcastAlert(payload) {
   if (!wss) return;

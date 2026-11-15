@@ -9,6 +9,8 @@ const marketState = require("./market-state");
  *
  * Không ghi DB tại đây. DB chỉ nhận snapshot theo lô (snapshot-writer.js).
  */
+// TODO: Làm simulator (biên độ, tần suất, mô hình giá) ~ BE1
+// Tham số đã đọc từ .env: TICK_INTERVAL_MS, TICK_RATIO, SIM_VOLATILITY
 const TICK_INTERVAL_MS = Number(process.env.TICK_INTERVAL_MS) || 1000;
 const TICK_RATIO = Number(process.env.TICK_RATIO) || 0.15; // % mã di chuyển mỗi tick
 const VOLATILITY = Number(process.env.SIM_VOLATILITY) || 0.003;

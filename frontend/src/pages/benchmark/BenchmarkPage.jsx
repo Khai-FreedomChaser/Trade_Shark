@@ -9,8 +9,8 @@ import {
   Legend,
   CartesianGrid
 } from "recharts";
-import { api } from "../services/api";
-import { formatPrice } from "../config";
+import { api } from "../../services/api";
+import { formatPrice } from "../../config";
 import "./benchmark.css";
 
 /**

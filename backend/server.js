@@ -14,6 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Toàn bộ REST API nằm dưới tiền tố /api (xem docs/CONTRACT.md)
+// TODO: Gắn authMiddleware cho các route user/alerts khi BE2 xong JWT ~ BE2
 app.use("/api", require("./routes"));
 
 datasource

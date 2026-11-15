@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import BoardPage from "./pages/board/BoardPage";
 import StockDetailPage from "./pages/stock-detail/StockDetailPage";
-import BenchmarkPage from "./pages/BenchmarkPage";
+import BenchmarkPage from "./pages/benchmark/BenchmarkPage";
 import PortfolioPage from "./pages/portfolio/PortfolioPage";
 import "./App.css";
 

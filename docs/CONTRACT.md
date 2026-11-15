@@ -25,13 +25,13 @@
 
 ## 3. REST Endpoints
 
-### 3.1 Market — trạng thái RAM (`routes/market`) — *BE1*
+### 3.1 Market — trạng thái RAM (`routes/market`) — *BE1 (Nguyệt)*
 | Method | Path | Mô tả |
 | --- | --- | --- |
 | GET | `/api/market/state` | Toàn bộ trạng thái hiện tại (bootstrap bảng điện) → `{ count, data: [TickPayload...] }` |
 | GET | `/api/market/state/:symbol` | Trạng thái 1 mã, 404 nếu không có |
 
-### 3.2 Stock — master data DB (`routes/stock`) — *BE1*
+### 3.2 Stock — master data DB (`routes/stock`) — *BE1 (Nguyệt)*
 | Method | Path | Mô tả |
 | --- | --- | --- |
 | GET | `/api/stock` | Danh sách mã (đã có) |
@@ -60,7 +60,7 @@ Response `POST /run` (case khớp cột `benchmark_logs`):
 }
 ```
 
-### 3.4 User & Giao dịch (`routes/user`) — *BE2* (chưa viết)
+### 3.4 User & Giao dịch (`routes/user`) — *BE2 (Khải)* (chưa viết)
 Đề xuất (chốt lại nếu muốn đổi):
 | Method | Path | Mô tả |
 | --- | --- | --- |
@@ -137,10 +137,10 @@ marketState (RAM, service/market/market-state.js)  ← NGUỒN SỰ THẬT CỦA
 
 | Bảng | Người ghi |
 | --- | --- |
-| `stocks` | Seed script (lead) — BE1 chỉ đọc |
-| `stock_snapshots` | BE1 (snapshot-writer) |
-| `benchmark_logs` | Lead (module benchmark) |
-| `users`, `balance_history`, `stock_users`, `stock_alerts` | BE2 |
+| `stocks` | Seed script (Bảo) — BE1 chỉ đọc |
+| `stock_snapshots` | BE1 (Nguyệt) — snapshot-writer |
+| `benchmark_logs` | Bảo (module benchmark) |
+| `users`, `balance_history`, `stock_users`, `stock_alerts` | BE2 (Khải) |
 | Frontend gọi REST + WS theo đúng contract này, không tự đoán field |
 
 ## 7. Cấu hình (.env — backend/.env)

@@ -36,5 +36,8 @@ export const api = {
       body: JSON.stringify({ size, pattern, runs })
     }),
   benchmarkLogs: (limit = 50) => request(`/api/benchmark/logs?limit=${limit}`)
-  // Backend 2 bổ sung tiếp các endpoint user/trade/alert ở đây (contract mục 3.4)
+
+  // TODO: Thêm call auth/trade/alerts ~ FE2
+  // register | login | refresh | me | deposit | withdraw | buy | sell
+  // | portfolio | balance-history | alerts
 };
