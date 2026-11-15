@@ -1,0 +1,13 @@
+.portfolio-placeholder {
+  margin-top: 24px;
+  background: #0b1220;
+  border: 1px dashed #1e2a3a;
+  border-radius: 10px;
+  padding: 20px;
+  color: #8b98a5;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.portfolio-placeholder code { color: #e6edf3; margin: 0 4px; }
+.portfolio-note { color: #d29922; }

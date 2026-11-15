@@ -1,0 +1,66 @@
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 10px 20px;
+  border-bottom: 1px solid #1e2a3a;
+  background: #0b1220;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.app-nav .brand {
+  font-weight: 700;
+  font-size: 18px;
+  color: #e6edf3;
+  text-decoration: none;
+}
+
+.app-nav nav {
+  display: flex;
+  gap: 16px;
+  flex: 1;
+}
+
+.app-nav nav a {
+  color: #8b98a5;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.app-nav nav a:hover {
+  color: #e6edf3;
+  background: #16202e;
+}
+
+.app-nav nav a.active {
+  color: #4cc2ff;
+  background: #16202e;
+}
+
+.ws-status {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ws-status.connected { color: #3fb950; }
+.ws-status.disconnected { color: #f85149; }
+.ws-status.closed { color: #8b98a5; }
+
+.app-content {
+  flex: 1;
+  padding: 16px 20px;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}

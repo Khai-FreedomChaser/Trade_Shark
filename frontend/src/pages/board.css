@@ -1,0 +1,74 @@
+.board-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.board-toolbar h1 {
+  font-size: 20px;
+  margin: 0;
+}
+
+.board-search {
+  background: #0b1220;
+  border: 1px solid #1e2a3a;
+  color: #e6edf3;
+  padding: 8px 12px;
+  border-radius: 8px;
+  min-width: 260px;
+  font-size: 14px;
+}
+
+.board-count {
+  color: #8b98a5;
+  font-size: 13px;
+  margin-left: auto;
+}
+
+.board-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.board-table th {
+  text-align: left;
+  color: #8b98a5;
+  font-weight: 500;
+  padding: 8px 10px;
+  border-bottom: 1px solid #1e2a3a;
+  position: sticky;
+  top: 52px;
+  background: #0b1220;
+}
+
+.board-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid #131c29;
+  color: #e6edf3;
+  font-variant-numeric: tabular-nums;
+}
+
+.board-table tbody tr {
+  cursor: pointer;
+}
+
+.board-table tbody tr:hover {
+  background: #16202e;
+}
+
+.board-table .right { text-align: right; }
+.board-table .symbol { font-weight: 600; }
+
+.up { color: #3fb950; }
+.down { color: #f85149; }
+.flat { color: #d29922; }
+.ceiling { color: #d2a8ff; }
+.floor { color: #79c0ff; }
+
+.board-error {
+  color: #f85149;
+  margin-top: 40px;
+  text-align: center;
+}
