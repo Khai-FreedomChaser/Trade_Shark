@@ -9,8 +9,8 @@ import {
   Tooltip,
   Legend
 } from "recharts";
-import { api } from "../services/api";
-import { formatPrice } from "../config";
+import { api } from "../../services/api";
+import { formatPrice } from "../../config";
 import "./detail.css";
 
 /**
