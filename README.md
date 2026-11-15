@@ -39,15 +39,30 @@ TradeShark/
 
 ## Cách chạy project
 
-### Frontend
+### 1. Database (Docker)
 
 ```bash
-cd frontend
-npm run dev
+docker compose up -d mysql
 ```
-### Backend
+
+### 2. Backend
 
 ```bash
 cd backend
+npm install
+cp .env.example .env        # điền mật khẩu MySQL
+npm run db:reset            # drop + migration + seed 3000 mã (1 lệnh duy nhất)
+npm run dev
+```
+
+- REST API: `http://localhost:3636/api/...`
+- WebSocket: `ws://localhost:3636/ws`
+- Chi tiết endpoint & payload: **docs/CONTRACT.md**
+
+### 3. Frontend
+
+```bash
+cd frontend
+npm install
 npm run dev
 ```

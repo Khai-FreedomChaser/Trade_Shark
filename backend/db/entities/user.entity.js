@@ -35,18 +35,22 @@ module.exports = new EntitySchema({
 
         dateOfBirth: {
             type: "datetime",
+            nullable: true,
         },
 
         refreshToken: {
-            type: "text"
+            type: "text",
+            nullable: true
         },
 
         refreshTokenExpiry: {
-            type: "datetime"
+            type: "datetime",
+            nullable: true
         },
 
         lastLogin: {
-            type: "datetime"
+            type: "datetime",
+            nullable: true
         },
         
         createdAt: {

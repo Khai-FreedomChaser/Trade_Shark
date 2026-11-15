@@ -37,6 +37,12 @@ module.exports = new EntitySchema({
             type: 'datetime',
         }
     },
+    indices: [
+        {
+            name: 'IDX_snapshot_stock_created',
+            columns: ['stockId', 'createdAt']
+        }
+    ],
     relations: {
         stock: {
             type: 'many-to-one',

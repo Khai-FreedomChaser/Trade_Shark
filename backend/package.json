@@ -11,7 +11,9 @@
     "migration:generate": "node scripts/migration-generate.js",
     "migration:run": "typeorm migration:run -d db/data-source.js",
     "migration:revert": "typeorm migration:revert -d db/data-source.js",
-    "migration:show": "typeorm migration:show -d db/data-source.js"
+    "migration:show": "typeorm migration:show -d db/data-source.js",
+    "seed": "node scripts/seed-stocks.js",
+    "db:reset": "node scripts/db-reset.js"
   },
   "keywords": [],
   "author": "",
@@ -22,7 +24,8 @@
     "dotenv": "^18.0.9",
     "express": "^5.3.0",
     "mysql2": "^3.24.6",
-    "typeorm": "^1.1.2"
+    "typeorm": "^1.1.2",
+    "ws": "^8.23.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
