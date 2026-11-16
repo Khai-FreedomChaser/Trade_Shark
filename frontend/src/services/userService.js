@@ -81,6 +81,10 @@ const mockService = {
   login: async (payload) => mockLogin(payload),
   refresh: async (refreshToken) => mockRefresh(refreshToken),
   me: async () => cloneMockState().user,
+  marketSymbols: async () => cloneMockState().portfolio.map((item) => ({
+    symbol: item.symbol,
+    price: item.currentPrice
+  })),
   deposit: async (amount) => {
     const state = getMockState();
     const value = Number(amount);
@@ -151,6 +155,7 @@ const apiService = {
   login: async (payload) => api.login(payload),
   refresh: async (refreshToken) => api.refresh(refreshToken),
   me: async () => api.me(),
+  marketSymbols: async () => collectionData(await api.marketState()),
   deposit: async (amount) => api.deposit(amount),
   withdraw: async (amount) => api.withdraw(amount),
   buy: async (payload) => api.buy(payload),
@@ -180,6 +185,7 @@ export const userService = {
     return result;
   },
   me: () => (FE2_USE_MOCK ? mockService : apiService).me(),
+  marketSymbols: () => (FE2_USE_MOCK ? mockService : apiService).marketSymbols(),
   deposit: (amount) => (FE2_USE_MOCK ? mockService : apiService).deposit(amount),
   withdraw: (amount) => (FE2_USE_MOCK ? mockService : apiService).withdraw(amount),
   buy: (payload) => (FE2_USE_MOCK ? mockService : apiService).buy(payload),

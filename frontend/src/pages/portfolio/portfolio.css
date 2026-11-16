@@ -27,6 +27,16 @@
 .portfolio-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; }
 .alert-form { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; margin: 18px 0; }
 .alert-form input, .trade-form input { min-width: 0; padding: 9px 10px; border: 1px solid #30445a; border-radius: 5px; background: #060b13; color: #e6edf3; font: inherit; }
+.symbol-picker-label { position: relative; }
+.symbol-picker { position: relative; }
+.symbol-picker input { width: 100%; }
+.alert-symbol-picker { position: relative; min-width: 0; }
+.alert-symbol-picker > input { width: 100%; }
+.symbol-menu { position: absolute; top: calc(100% + 4px); right: 0; left: 0; z-index: 3; max-height: 190px; overflow-y: auto; padding: 4px; border: 1px solid #30445a; border-radius: 5px; background: #0b1220; box-shadow: 0 12px 25px rgba(0, 0, 0, 0.35); }
+.symbol-option { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 12px; border: 0; border-radius: 4px; padding: 8px 9px; color: #e6edf3; background: transparent; cursor: pointer; text-align: left; font: inherit; }
+.symbol-option:hover, .symbol-option[aria-selected="true"] { background: #162b3c; }
+.symbol-option small { overflow: hidden; color: #8b98a5; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.symbol-empty { margin: 0; padding: 10px; color: #8b98a5; font-size: 12px; }
 .alert-list { display: grid; gap: 8px; }
 .alert-row { display: grid; grid-template-columns: 0.8fr 1fr 1fr auto; align-items: center; gap: 10px; padding: 10px; border: 1px solid #1e2a3a; border-radius: 5px; color: #c9d1d9; font-size: 13px; }
 .form-error, .page-error { color: #f85149; font-size: 13px; }

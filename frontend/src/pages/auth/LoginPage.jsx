@@ -1,19 +1,23 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { userService } from "../../services/userService";
 import "./login.css";
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [email, setEmail] = useState("manh@example.com");
   const [password, setPassword] = useState("123456");
   const [userName, setUserName] = useState("");
-  const [mode, setMode] = useState(() => (
-    new URLSearchParams(location.search).get("mode") === "register" ? "register" : "login"
-  ));
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const mode = searchParams.get("mode") === "register" ? "register" : "login";
+
+  function toggleMode() {
+    setSearchParams(mode === "login" ? { mode: "register" } : {});
+    setError("");
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -64,7 +68,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <button className="link-button" type="button" onClick={() => { setMode(mode === "login" ? "register" : "login"); setError(""); }}>
+        <button className="link-button" type="button" onClick={toggleMode}>
           {mode === "login" ? "Chưa có tài khoản? Đăng ký" : "Đã có tài khoản? Đăng nhập"}
         </button>
         <p className="auth-hint">Demo: manh@example.com / 123456</p>

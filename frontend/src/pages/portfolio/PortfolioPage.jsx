@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { ws } from "../../services/ws";
 import { userService } from "../../services/userService";
 import BalanceHistory from "../../components/fe2/BalanceHistory";
@@ -17,9 +16,9 @@ function patchPrices(rows, ticks) {
 }
 
 export default function PortfolioPage() {
-  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [portfolio, setPortfolio] = useState([]);
+  const [marketSymbols, setMarketSymbols] = useState([]);
   const [history, setHistory] = useState([]);
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,16 +30,18 @@ export default function PortfolioPage() {
 
   async function loadWorkspace() {
     setError("");
-    const [me, holdings, balanceHistory, userAlerts] = await Promise.all([
+    const [me, holdings, balanceHistory, userAlerts, symbols] = await Promise.all([
       userService.me(),
       userService.portfolio(),
       userService.balanceHistory(),
-      userService.alerts()
+      userService.alerts(),
+      userService.marketSymbols()
     ]);
     setUser(me);
     setPortfolio(holdings);
     setHistory(balanceHistory);
     setAlerts(userAlerts);
+    setMarketSymbols(symbols);
   }
 
   useEffect(() => {
@@ -49,14 +50,16 @@ export default function PortfolioPage() {
       userService.me(),
       userService.portfolio(),
       userService.balanceHistory(),
-      userService.alerts()
+      userService.alerts(),
+      userService.marketSymbols()
     ])
-      .then(([me, holdings, balanceHistory, userAlerts]) => {
+      .then(([me, holdings, balanceHistory, userAlerts, symbols]) => {
         if (cancelled) return;
         setUser(me);
         setPortfolio(holdings);
         setHistory(balanceHistory);
         setAlerts(userAlerts);
+        setMarketSymbols(symbols);
       })
       .catch((loadError) => { if (!cancelled) setError(loadError.message); })
       .finally(() => { if (!cancelled) setLoading(false); });
@@ -96,8 +99,6 @@ export default function PortfolioPage() {
     if (success) setBalanceModal(null);
   }
 
-  function logout() { userService.logout(); navigate("/login", { replace: true }); }
-
   async function submitTrade({ side, symbol, quantity }) {
     const success = await runAction(() => side === "buy" ? userService.buy({ symbol, quantity }) : userService.sell({ symbol, quantity }), `${side === "buy" ? "Mua" : "Bán"} ${symbol} thành công.`);
     if (success) setTrade(null);
@@ -107,13 +108,13 @@ export default function PortfolioPage() {
   if (!user) return <p className="portfolio-state">Không tải được tài khoản. {error}</p>;
 
   return <div className="portfolio-page">
-    <header className="portfolio-header"><div><p className="eyebrow">TÀI KHOẢN CÁ NHÂN</p><h1>Danh mục của tôi</h1></div><button className="outline-button" type="button" onClick={logout}>Đăng xuất</button></header>
+    <header className="portfolio-header"><div><p className="eyebrow">TÀI KHOẢN CÁ NHÂN</p><h1>Danh mục của tôi</h1></div></header>
     {error && <div className="page-error">{error}</div>}
     <BalanceSummary user={user} busy={busy} onDeposit={() => setBalanceModal("deposit")} onWithdraw={() => setBalanceModal("withdraw")} />
     <PortfolioTable rows={portfolio} onTrade={(side, symbol) => setTrade({ mode: side, symbol })} />
-    <div className="portfolio-grid"><BalanceHistory rows={history} /><AlertForm alerts={alerts} busy={busy} onSave={(payload) => runAction(() => userService.saveAlert(payload), `Đã lưu cảnh báo ${payload.symbol}.`)} onDelete={(alert) => runAction(() => userService.deleteAlert(alert), `Đã xóa cảnh báo ${alert.symbol}.`)} /></div>
+    <div className="portfolio-grid"><BalanceHistory rows={history} /><AlertForm alerts={alerts} marketSymbols={marketSymbols} busy={busy} onSave={(payload) => runAction(() => userService.saveAlert(payload), `Đã lưu cảnh báo ${payload.symbol}.`)} onDelete={(alert) => runAction(() => userService.deleteAlert(alert), `Đã xóa cảnh báo ${alert.symbol}.`)} /></div>
     <ToastNotification toast={toast} onClose={() => setToast(null)} />
     {balanceModal && <BalanceModal mode={balanceModal} user={user} busy={busy} error={error} onClose={() => setBalanceModal(null)} onSubmit={submitBalance} />}
-    {trade && <TradeModal {...trade} rows={portfolio} busy={busy} error={error} onClose={() => setTrade(null)} onSubmit={submitTrade} />}
+    {trade && <TradeModal {...trade} rows={portfolio} marketSymbols={marketSymbols} busy={busy} error={error} onClose={() => setTrade(null)} onSubmit={submitTrade} />}
   </div>;
 }
