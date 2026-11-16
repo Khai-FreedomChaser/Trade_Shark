@@ -95,11 +95,41 @@ async function withdrawal(req, res) {
   }
 }
 
+async function buyStock(req, res) {
+  try {
+    const result = await userService.buyStock(req.user.id, req.body?.symbol, req.body?.quantity);
+    return res.status(201).json(result);
+  } catch (error) {
+    const statusCode = error.statusCode || 500;  
+    
+    return res.status(statusCode).json({
+        message: statusCode === 500 ? "Không thể mua cổ phiếu" : error.message,
+        error: statusCode === 500 ? "Lỗi nội bộ" : error.message
+    });
+  }
+}
+
+async function sellStock(req, res) {
+  try {
+    const result = await userService.sellStock(req.user.id, req.body?.symbol, req.body?.quantity);
+    return res.status(201).json(result);
+  } catch (error) {
+    const statusCode = error.statusCode || 500;
+
+    return res.status(statusCode).json({
+      message: statusCode === 500 ? "Không thể bán cổ phiếu" : error.message,
+      error: statusCode === 500 ? "Lỗi nội bộ" : error.message
+    });
+  }
+}
+
 module.exports = {
     registerUser,
     loginUser,
     refreshAccessToken,
     getMe,
     deposit,
-    withdrawal
+    withdrawal,
+    buyStock,
+    sellStock
 };

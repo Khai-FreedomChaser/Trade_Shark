@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const { genId } = require("../../utils/id");
+const { marketState } = require("../market");
 
 function signAccessToken(user) {
   return jwt.sign(
@@ -272,13 +273,181 @@ async function withdrawal(userId, amount) {
   });
 }
 
+async function buyStock(userId, symbol, quantity){
+  const normSymbol = symbol.trim().toUpperCase();
+
+  if(quantity <= 0 || !Number.isInteger(quantity)){
+    throw createError("Số lượng mua phải là số nguyên dương", 400);
+  }
+
+  const market = marketState.get(normSymbol);
+
+  if(!market){
+    throw createError("Cổ phiếu không tồn tại", 404);
+  }
+
+  return datasource.transaction(async (manager) => {
+    const userRepository = manager.getRepository("User");
+    const stockUserRepository = manager.getRepository("StockUser");
+
+    const user = await userRepository.findOne({ 
+      where: { id: userId },
+      lock: { mode: "pessimistic_write" }
+    });
+
+    if(!user){
+      throw createError("Người dùng không tồn tại", 404);
+    }
+
+    // if(user.balance <= 0 || user.balance < market.price * quantity){
+    //   throw createError("Số dư không đủ để mua cổ phiếu", 400);
+    // }
+
+    const position = await stockUserRepository.findOne({
+      where: {
+        userId,
+        stockId: market.stockId
+      },
+      lock: { mode: "pessimistic_write" }
+    });
+    
+    const priceCents = Math.round(Number(market.price) * 100);
+    const totalCostCents = priceCents * quantity;
+    const balanceCents = Math.round(Number(user.balance) * 100);
+
+    if (balanceCents < totalCostCents) {
+      throw createError("Số dư không đủ để mua cổ phiếu", 400);
+    }
+
+    const oldQuantity = position ? Number(position.quantity) : 0;
+    const oldAverageCents = position ? Math.round(Number(position.averagePrice) * 100): 0;
+
+    const newQuantity = oldQuantity + quantity;
+    const newAverageCents = Math.round((oldQuantity * oldAverageCents + quantity * priceCents) / newQuantity);
+
+    const updatedPosition = position || stockUserRepository.create({
+      userId,
+      stockId: market.stockId,
+      createdAt: new Date()
+    });
+
+    updatedPosition.quantity = newQuantity;
+    updatedPosition.averagePrice = newAverageCents / 100;
+    await stockUserRepository.save(updatedPosition);
+
+    await userRepository.decrement({ id: userId }, "balance", totalCostCents / 100);
+
+    const historyRepository = manager.getRepository("BalanceHistory");
+
+    await historyRepository.save(
+      historyRepository.create({
+        id: genId("bh"),
+        userId,
+        stockId: market.stockId,
+        amount: -(totalCostCents / 100),
+        type: "trade",
+        createdAt: new Date()
+      })
+    );
+    return {
+      symbol: normSymbol,
+      quantity: newQuantity,
+      averagePrice: newAverageCents / 100,
+      balance: (balanceCents - totalCostCents) / 100
+    };
+  });
+  
+}
+
+async function sellStock(userId, symbol, quantity) {
+  if (typeof symbol !== "string" || !symbol.trim()) {
+    throw createError("Mã cổ phiếu là bắt buộc", 400);
+  }
+
+  const normSymbol = symbol.trim().toUpperCase();
+
+  if (!Number.isInteger(quantity) || quantity <= 0) {
+    throw createError("Số lượng bán phải là số nguyên dương", 400);
+  }
+
+  const market = marketState.get(normSymbol);
+
+  if (!market) {
+    throw createError("Cổ phiếu không tồn tại", 404);
+  }
+
+  return datasource.transaction(async (manager) => {
+    const userRepository = manager.getRepository("User");
+    const stockUserRepository = manager.getRepository("StockUser");
+    const historyRepository = manager.getRepository("BalanceHistory");
+
+    const user = await userRepository.findOne({
+      where: { id: userId },
+      lock: { mode: "pessimistic_write" }
+    });
+
+    if (!user) {
+      throw createError("Người dùng không tồn tại", 404);
+    }
+
+    const position = await stockUserRepository.findOne({
+      where: { userId, stockId: market.stockId },
+      lock: { mode: "pessimistic_write" }
+    });
+
+    if (!position || Number(position.quantity) < quantity) {
+      throw createError("Không sở hữu đủ số cổ phiếu để bán", 400);
+    }
+
+    const priceCents = Math.round(Number(market.price) * 100);
+    const proceedsCents = priceCents * quantity;
+    const remainingQuantity = Number(position.quantity) - quantity;
+
+    if (remainingQuantity === 0) {
+      await stockUserRepository.delete({ userId, stockId: market.stockId });
+    } else {
+      position.quantity = remainingQuantity;
+      await stockUserRepository.save(position);
+    }
+
+    await userRepository.increment(
+      { id: userId },
+      "balance",
+      proceedsCents / 100
+    );
+
+    await historyRepository.save(
+      historyRepository.create({
+        id: genId("bh"),
+        userId,
+        stockId: market.stockId,
+        amount: proceedsCents / 100,
+        type: "trade",
+        createdAt: new Date()
+      })
+    );
+
+    const updatedUser = await userRepository.findOneBy({ id: userId });
+
+    return {
+      symbol: normSymbol,
+      soldQuantity: quantity,
+      executionPrice: priceCents / 100,
+      remainingQuantity,
+      balance: Number(updatedUser.balance)
+    };
+  });
+}
+
 module.exports = {
   registerUser,
   loginUser,
   refreshAccessToken,
   getMe,
   deposit,
-  withdrawal
+  withdrawal,
+  buyStock,
+  sellStock
 };
 
 

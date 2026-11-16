@@ -10,5 +10,7 @@ router.post("/refresh", userController.refreshAccessToken);
 router.get("/me", authMiddleware, userController.getMe);
 router.post("/balance/deposit", authMiddleware, userController.deposit);
 router.post("/balance/withdrawal", authMiddleware, userController.withdrawal);
+router.post("/trade/buy", authMiddleware, userController.buyStock);
+router.post("/trade/sell", authMiddleware, userController.sellStock);
 
 module.exports = router;
