@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { formatPrice } from "../../config";
 
-const QUICK_AMOUNTS = [100000, 500000, 1000000, 5000000];
-
 export default function BalanceModal({ mode, user, busy, error, onClose, onSubmit }) {
   const [amount, setAmount] = useState("");
   const [validationError, setValidationError] = useState("");
@@ -23,11 +21,6 @@ export default function BalanceModal({ mode, user, busy, error, onClose, onSubmi
     }
     setValidationError("");
     onSubmit({ mode, amount: value });
-  }
-
-  function chooseAmount(value) {
-    setAmount(String(value));
-    setValidationError("");
   }
 
   return (
@@ -61,8 +54,8 @@ export default function BalanceModal({ mode, user, busy, error, onClose, onSubmi
             required
           />
           <div className="quick-amounts" aria-label="Mức tiền nhanh">
-            {QUICK_AMOUNTS.map((value) => (
-              <button key={value} type="button" onClick={() => chooseAmount(value)}>{formatPrice(value)}</button>
+            {[100000, 500000, 1000000, 5000000].map((value) => (
+              <button key={value} type="button" onClick={() => { setAmount(String(value)); setValidationError(""); }}>{formatPrice(value)}</button>
             ))}
           </div>
           <div className={`balance-after ${balanceAfter < 0 ? "negative" : ""}`}>
