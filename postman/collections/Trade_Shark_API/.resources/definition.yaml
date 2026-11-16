@@ -54,3 +54,21 @@ variables:
         type: cloud
         secretId: 832b8667-ac72-4824-be56-c1224b2a506e
         vaultId: 2fc72f47-0b8e-45f1-bd78-ddc00026669c
+  - key: json_web_token_00dg
+    secret: true
+    disabled: false
+    source:
+      provider: postman
+      postman:
+        type: cloud
+        secretId: 3805bcb6-f9c7-46d5-ac97-4e0610da597d
+        vaultId: 2fc72f47-0b8e-45f1-bd78-ddc00026669c
+  - key: json_web_token_0h59
+    secret: true
+    disabled: false
+    source:
+      provider: postman
+      postman:
+        type: cloud
+        secretId: f28a7817-8bb4-4674-95fb-4d1828797407
+        vaultId: 2fc72f47-0b8e-45f1-bd78-ddc00026669c

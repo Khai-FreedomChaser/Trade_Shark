@@ -439,6 +439,79 @@ async function sellStock(userId, symbol, quantity) {
   });
 }
 
+async function getBalanceHistory(userId) {
+  const repository = datasource.getRepository("BalanceHistory");
+
+  const history = await repository.find({
+    where: { userId },
+    order: { createdAt: "DESC" }
+  });
+
+  return history.map((item) => ({
+    id: item.id,
+    stockId: item.stockId,
+    amount: Number(item.amount),
+    type: item.type,
+    createdAt: item.createdAt
+  }));
+}
+
+async function getPortfolio(userId) {
+  const stockUserRepository = datasource.getRepository("StockUser");
+
+  const positions = await stockUserRepository.find({
+    where: { userId },
+    relations: { stock: true }
+  });
+
+  let totalCostCents = 0;
+  let totalMarketValueCents = 0;
+
+   const items = positions.map((position) => {
+    const symbol = position.stock.symbol;
+    const market = marketState.get(symbol);
+
+    if (!market) {
+      throw createError(`Không lấy được giá hiện tại của ${symbol}`, 503);
+    }
+
+    const quantity = Number(position.quantity);
+    const averagePriceCents = Math.round(Number(position.averagePrice) * 100);
+    const currentPriceCents = Math.round(Number(market.price) * 100);
+
+    const costCents = quantity * averagePriceCents;
+    const marketValueCents = quantity * currentPriceCents;
+    const profitLossCents = marketValueCents - costCents;
+
+    totalCostCents += costCents;
+    totalMarketValueCents += marketValueCents;
+
+    return {
+      stockId: position.stockId,
+      symbol,
+      companyName: position.stock.companyName,
+      quantity,
+      averagePrice: averagePriceCents / 100,
+      currentPrice: currentPriceCents / 100,
+      costValue: costCents / 100,
+      marketValue: marketValueCents / 100,
+      profitLoss: profitLossCents / 100,
+      profitLossPercent: costCents === 0
+        ? 0
+        : Number(((profitLossCents / costCents) * 100).toFixed(2))
+    };
+  });
+
+  return {
+    positions: items,
+    totals: {
+      costValue: totalCostCents / 100,
+      marketValue: totalMarketValueCents / 100,
+      profitLoss: (totalMarketValueCents - totalCostCents) / 100
+    }
+  };
+}
+
 module.exports = {
   registerUser,
   loginUser,
@@ -447,7 +520,9 @@ module.exports = {
   deposit,
   withdrawal,
   buyStock,
-  sellStock
+  sellStock,
+  getBalanceHistory,
+  getPortfolio
 };
 
 

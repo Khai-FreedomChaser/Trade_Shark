@@ -123,6 +123,34 @@ async function sellStock(req, res) {
   }
 }
 
+async function getBalanceHistory(req, res) {
+  try {
+    const result = await userService.getBalanceHistory(req.user.id);
+    return res.status(200).json(result);
+  } catch (error) {
+    const statusCode = error.statusCode || 500; 
+
+    return res.status(statusCode).json({
+      message: statusCode === 500 ? "Không thể lấy lịch sử số dư" : error.message,
+      error: statusCode === 500 ? "Lỗi nội bộ" : error.message
+    });
+  } 
+}
+
+async function getPortfolio(req, res) {
+    try {
+        const result = await userService.getPortfolio(req.user.id);
+        return res.status(200).json(result);
+    } catch (error) {
+        const statusCode = error.statusCode || 500;
+
+        return res.status(statusCode).json({
+            message: statusCode === 500 ? "Không thể lấy danh mục đầu tư" : error.message,
+            error: statusCode === 500 ? "Lỗi nội bộ" : error.message
+        });
+    }
+}
+
 module.exports = {
     registerUser,
     loginUser,
@@ -131,5 +159,7 @@ module.exports = {
     deposit,
     withdrawal,
     buyStock,
-    sellStock
+    sellStock,
+    getBalanceHistory,
+    getPortfolio
 };

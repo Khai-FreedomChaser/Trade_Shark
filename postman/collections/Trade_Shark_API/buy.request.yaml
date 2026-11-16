@@ -1,5 +1,4 @@
 $kind: http-request
-name: http://localhost:3636/api/user/trade/buy
 description: ""
 url: http://localhost:3636/api/user/trade/buy
 method: POST

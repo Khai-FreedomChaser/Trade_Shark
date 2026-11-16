@@ -1,0 +1,9 @@
+$kind: http-request
+description: ""
+url: http://localhost:3636/api/user/portfolio
+method: GET
+auth:
+  type: bearer
+  credentials:
+    token: "{{json_web_token_0h59}}"
+order: 15000
