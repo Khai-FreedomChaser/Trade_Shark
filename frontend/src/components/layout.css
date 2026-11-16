@@ -47,6 +47,68 @@
   background: #16202e;
 }
 
+.nav-account {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.nav-auth-button {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #40556c;
+  border-radius: 5px;
+  padding: 6px 10px;
+  color: #c9d1d9;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.nav-auth-button:hover {
+  color: #e6edf3;
+  border-color: #4cc2ff;
+  background: #16202e;
+}
+
+.nav-register {
+  color: #06111b;
+  border-color: #4cc2ff;
+  background: #4cc2ff;
+  font-weight: 700;
+}
+
+.nav-register:hover {
+  color: #06111b;
+  background: #79d3ff;
+}
+
+.account-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #c9d1d9;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.account-chip:hover { color: #e6edf3; }
+
+.account-avatar {
+  display: grid;
+  width: 25px;
+  height: 25px;
+  place-items: center;
+  border-radius: 50%;
+  color: #06111b;
+  background: #4cc2ff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .ws-status {
   font-size: 12px;
   font-weight: 600;
@@ -63,4 +125,17 @@
   width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
+}
+
+@media (max-width: 760px) {
+  .app-nav { flex-wrap: wrap; gap: 10px 14px; }
+  .app-nav nav { order: 3; flex-basis: 100%; overflow-x: auto; }
+  .ws-status { margin-left: auto; }
+}
+
+@media (max-width: 480px) {
+  .app-nav { padding: 10px 12px; }
+  .account-name, .nav-logout { display: none; }
+  .app-nav nav { gap: 6px; }
+  .app-nav nav a { padding-inline: 7px; }
 }

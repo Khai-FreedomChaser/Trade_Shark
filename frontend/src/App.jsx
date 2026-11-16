@@ -5,6 +5,8 @@ import BoardPage from "./pages/board/BoardPage";
 import StockDetailPage from "./pages/stock-detail/StockDetailPage";
 import BenchmarkPage from "./pages/benchmark/BenchmarkPage";
 import PortfolioPage from "./pages/portfolio/PortfolioPage";
+import LoginPage from "./pages/auth/LoginPage";
+import AuthGuard from "./components/fe2/AuthGuard";
 import "./App.css";
 
 /**
@@ -23,7 +25,8 @@ export default function App() {
           <Route path="/" element={<BoardPage />} />
           <Route path="/stock/:symbol" element={<StockDetailPage />} />
           <Route path="/benchmark" element={<BenchmarkPage />} />
-          <Route path="/portfolio" element={<PortfolioPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/portfolio" element={<AuthGuard><PortfolioPage /></AuthGuard>} />
         </Route>
       </Routes>
     </BrowserRouter>
