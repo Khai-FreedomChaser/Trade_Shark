@@ -1,5 +1,4 @@
 $kind: http-request
-name: Delete
 description: ""
 url: "{{base_url}}/stock/stock-001"
 method: DELETE
