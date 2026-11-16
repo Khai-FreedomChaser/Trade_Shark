@@ -512,6 +512,127 @@ async function getPortfolio(userId) {
   };
 }
 
+async function getUserAlerts(userId) {
+  const repository = datasource.getRepository("StockAlert");
+
+  const alerts = await repository.find({
+    where: { userId },
+    relations: { stock: true },
+    order: { createdAt: "DESC" }
+  });
+
+   return alerts.map((alert) => ({
+    stockId: alert.stockId,
+    symbol: alert.stock.symbol,
+    companyName: alert.stock.companyName,
+    alertMin: alert.alertMin === null ? null : Number(alert.alertMin),
+    alertMax: alert.alertMax === null ? null : Number(alert.alertMax)
+  }));
+}
+
+async function saveUserAlert(userId, data) {
+  const { stockId, symbol, alertMin, alertMax } = data || {};
+
+  const hasStockId = typeof stockId === "string" && stockId.trim() !== "";
+  const hasSymbol = typeof symbol === "string" && symbol.trim() !== "";
+
+  if (hasStockId === hasSymbol) {
+    throw createError("Nhập stockId hoặc symbol", 400);
+  }
+
+  const hasMin = Object.hasOwn(data, "alertMin");
+  const hasMax = Object.hasOwn(data, "alertMax");
+
+  if (!hasMin && !hasMax) {
+    throw createError("Cần truyền alertMin hoặc alertMax", 400);
+  }
+
+  for (const value of [alertMin, alertMax]) {
+    if (value !== undefined && value !== null &&
+        (typeof value !== "number" || !Number.isFinite(value) || value <= 0)) {
+      throw createError("Alert phải là số dương", 400);
+    }
+  }
+
+  const stockRepository = datasource.getRepository("Stock");
+  const alertRepository = datasource.getRepository("StockAlert");
+
+  const stock = hasStockId
+    ? await stockRepository.findOneBy({ id: stockId.trim() })
+    : await stockRepository.findOneBy({ symbol: symbol.trim().toUpperCase() });
+
+  if (!stock) {
+    throw createError("Cổ phiếu không tồn tại", 404);
+  }
+
+  let alert = await alertRepository.findOneBy({
+    userId,
+    stockId: stock.id
+  });
+
+  const isNew = !alert;
+
+  if (!alert) {
+    alert = alertRepository.create({
+      userId,
+      stockId: stock.id,
+      alertMin: null,
+      alertMax: null,
+      createdAt: new Date()
+    });
+  }
+
+  if (hasMin) alert.alertMin = alertMin;
+  if (hasMax) alert.alertMax = alertMax;
+
+  if (alert.alertMin == null && alert.alertMax == null) {
+    throw createError("Cần có ít nhất một alert", 400);
+  }
+
+  const saved = await alertRepository.save(alert);
+
+  return {
+    stockId: stock.id,
+    symbol: stock.symbol,
+    alertMin: saved.alertMin == null ? null : Number(saved.alertMin),
+    alertMax: saved.alertMax == null ? null : Number(saved.alertMax),
+    isNew
+  };
+}
+
+async function deleteUserAlert(userId, data) {
+  const { stockId, symbol } = data || {};
+
+  const hasStockId = typeof stockId === "string" && stockId.trim() !== "";
+  const hasSymbol = typeof symbol === "string" && symbol.trim() !== "";
+
+  if (hasStockId === hasSymbol) {
+    throw createError("Hãy nhập stockId hoặc symbol", 400);
+  }
+
+  const stockRepository = datasource.getRepository("Stock");
+  const alertRepository = datasource.getRepository("StockAlert");
+
+  const stock = hasStockId
+    ? await stockRepository.findOneBy({ id: stockId.trim() })
+    : await stockRepository.findOneBy({ symbol: symbol.trim().toUpperCase() });
+
+  if (!stock) {
+    throw createError("Cổ phiếu không tồn tại", 404);
+  }
+
+  const result = await alertRepository.delete({
+    userId,
+    stockId: stock.id
+  });
+
+  if (!result.affected) {
+    throw createError("Không tìm thấy cảnh báo của cổ phiếu này", 404);
+  }
+
+  return { message: "Đã xóa alert", stockId: stock.id, symbol: stock.symbol };
+}
+
 module.exports = {
   registerUser,
   loginUser,
@@ -522,7 +643,10 @@ module.exports = {
   buyStock,
   sellStock,
   getBalanceHistory,
-  getPortfolio
+  getPortfolio,
+  getUserAlerts,
+  saveUserAlert,
+  deleteUserAlert
 };
 
 

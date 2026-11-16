@@ -1,0 +1,13 @@
+$kind: http-request
+name: alerts
+description: ""
+url: http://localhost:3636/api/user/alerts
+method: GET
+body:
+  type: json
+  content: ""
+auth:
+  type: bearer
+  credentials:
+    token: "{{json_web_token_1bck}}"
+order: 17000

@@ -1,0 +1,13 @@
+$kind: http-request
+name: alerts
+description: ""
+url: http://localhost:3636/api/user/alerts
+method: DELETE
+body:
+  type: json
+  content: "{\r\n  \"symbol\": \"YNW\"\r\n}"
+auth:
+  type: bearer
+  credentials:
+    token: "{{json_web_token_0o7r}}"
+order: 18000

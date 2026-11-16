@@ -151,6 +151,49 @@ async function getPortfolio(req, res) {
     }
 }
 
+async function getAlerts(req, res) {
+    try {
+        const result = await userService.getUserAlerts(req.user.id, req.body);
+        return res.status(200).json(result);
+    } catch (error) {
+        const statusCode = error.statusCode || 500;
+
+        return res.status(statusCode).json({
+            message: statusCode === 500 ? "Không thể lấy thông báo" : error.message,
+            error: statusCode === 500 ? "Lỗi nội bộ" : error.message
+        });
+    }       
+
+}
+
+async function saveUserAlert(req, res) {
+  try {
+    const result = await userService.saveUserAlert(req.user.id, req.body);
+    return res.status(result.isNew ? 201 : 200).json(result);
+  } catch (error) {
+    const statusCode = error.statusCode || 500;
+
+    return res.status(statusCode).json({
+      message: statusCode === 500 ? "Không thể lưu cảnh báo" : error.message,
+      error: statusCode === 500 ? "Lỗi nội bộ" : error.message
+    });
+  }
+}
+
+async function deleteUserAlert(req, res) {
+  try {
+    const result = await userService.deleteUserAlert(req.user.id, req.body);
+    return res.status(200).json(result);
+  } catch (error) {
+    const statusCode = error.statusCode || 500;
+
+    return res.status(statusCode).json({
+      message: statusCode === 500 ? "Không thể xóa cảnh báo" : error.message,
+      error: statusCode === 500 ? "Lỗi nội bộ" : error.message
+    });
+  }
+}
+
 module.exports = {
     registerUser,
     loginUser,
@@ -161,5 +204,8 @@ module.exports = {
     buyStock,
     sellStock,
     getBalanceHistory,
-    getPortfolio
+    getPortfolio,
+    getAlerts,
+    saveUserAlert,
+    deleteUserAlert
 };

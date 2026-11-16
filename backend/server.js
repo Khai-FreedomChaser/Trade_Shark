@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const { startAlertListener } = require("./service/user/alert-listener");
 require("dotenv").config();
 
 const datasource = require("./db/data-source");
@@ -31,6 +32,7 @@ datasource
 
     // WebSocket lõi real-time: ws://localhost:3636/ws
     attachWsServer(server);
+    startAlertListener();
 
     if (process.env.SIM_ENABLED !== "false") {
       startSimulator();

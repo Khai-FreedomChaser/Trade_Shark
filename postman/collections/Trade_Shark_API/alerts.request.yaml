@@ -1,0 +1,20 @@
+$kind: http-request
+description: ""
+url: http://localhost:3636/api/user/alerts
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"symbol\": \"YNW\",\r
+
+    \  \"alertMin\": 70000,\r
+
+    \  \"alertMax\": 80000\r
+
+    }"
+auth:
+  type: bearer
+  credentials:
+    token: "{{json_web_token_1bck}}"
+order: 16000

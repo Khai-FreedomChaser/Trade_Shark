@@ -14,4 +14,7 @@ router.post("/trade/buy", authMiddleware, userController.buyStock);
 router.post("/trade/sell", authMiddleware, userController.sellStock);
 router.get("/balance-history", authMiddleware, userController.getBalanceHistory);
 router.get("/portfolio", authMiddleware, userController.getPortfolio);
+router.get("/alerts", authMiddleware, userController.getAlerts);
+router.post("/alerts", authMiddleware, userController.saveUserAlert);
+router.delete("/alerts", authMiddleware, userController.deleteUserAlert);
 module.exports = router;
