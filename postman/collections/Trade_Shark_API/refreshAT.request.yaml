@@ -6,7 +6,7 @@ body:
   type: json
   content: "{\r
 
-    \  \"refreshToken\": \"{{json_web_token_110l}}\"\r
+    \    \"refreshToken\": \"{{json_web_token_184d}}\"\r
 
     }"
 order: 8000

@@ -187,12 +187,98 @@ async function getMe(userId) {
   };
 }
 
-// TODO: Hiện thực hóa nghiệp vụ user tại đây (auth, trade, alerts) ~ BE2
+async function deposit(userId, amount) {
+  if (typeof amount !== "number" ||
+    !Number.isFinite(amount) ||
+    amount <= 0 ||
+    Math.round(amount * 100) !== amount * 100) {
+    throw createError("Số tiền nạp phải là số dương, tối đa 2 chữ số thập phân", 400);
+  }
+
+  return datasource.transaction(async (manager) => {
+    const userRepository = manager.getRepository("User");
+    const historyRepository = manager.getRepository("BalanceHistory");
+    const user = await userRepository.findOneBy({ id: userId });
+
+    if (!user) {
+      throw createError("Người dùng không tồn tại", 404);
+    }
+
+    await userRepository.increment({ id: userId }, "balance", amount);
+
+    await historyRepository.save(
+      historyRepository.create({
+        id: genId("bh"),
+        userId,
+        amount,
+        type: "deposit",
+        createdAt: new Date()
+      })
+    );
+
+    const updatedUser = await userRepository.findOneBy({ id: userId });
+
+    return {
+      balance: Number(updatedUser.balance ?? 0)
+    };
+  });
+}
+
+async function withdrawal(userId, amount) {
+  if (typeof amount !== "number" ||
+    !Number.isFinite(amount) ||
+    amount <= 0 ||
+    Math.round(amount * 100) !== amount * 100) {
+    throw createError("Số tiền rút phải là số dương, tối đa 2 chữ số thập phân", 400);
+  }
+
+  return datasource.transaction(async (manager) => {
+    const userRepository = manager.getRepository("User");
+    const historyRepository = manager.getRepository("BalanceHistory");
+
+    const user = await userRepository.findOne({
+      where : {id: userId},
+      lock: { mode: "pessimistic_write" }
+    });
+
+    if (!user) {
+      throw createError("Người dùng không tồn tại", 404);
+    }
+
+    const balanceCents = Math.round(Number(user.balance) * 100);
+    const amountCents = Math.round(amount * 100);
+
+    if (amountCents > balanceCents) {
+      throw createError("Số dư không đủ để rút", 400);
+    }
+
+    await userRepository.decrement({ id: userId }, "balance", amount); 
+
+    await historyRepository.save(
+      historyRepository.create({
+        id: genId("bh"),
+        userId,
+        amount,
+        type: "withdrawal",
+        createdAt: new Date()
+      })
+    );
+
+    const updatedUser = await userRepository.findOneBy({ id: userId });
+
+    return {
+      balance: Number(updatedUser.balance ?? 0)
+    };
+  });
+}
+
 module.exports = {
   registerUser,
   loginUser,
   refreshAccessToken,
-  getMe
+  getMe,
+  deposit,
+  withdrawal
 };
 
 

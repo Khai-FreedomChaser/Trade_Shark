@@ -66,9 +66,40 @@ async function getMe(req, res) {
     }
 
 }
+
+async function deposit(req, res) {
+  try {
+    const result = await userService.deposit(req.user.id, req.body?.amount);
+    return res.status(201).json(result);
+  } catch (error) {
+    const statusCode = error.statusCode || 500;
+
+    return res.status(statusCode).json({
+      message: statusCode === 500 ? "Không thể nạp tiền" : error.message,
+      error: statusCode === 500 ? "Lỗi nội bộ" : error.message
+    });
+  }
+}
+
+async function withdrawal(req, res) {
+  try {
+    const result = await userService.withdrawal(req.user.id, req.body?.amount);
+    return res.status(201).json(result);
+  } catch (error) {
+    const statusCode = error.statusCode || 500;
+
+    return res.status(statusCode).json({
+      message: statusCode === 500 ? "Không thể rút tiền" : error.message,
+      error: statusCode === 500 ? "Lỗi nội bộ" : error.message
+    });
+  }
+}
+
 module.exports = {
     registerUser,
     loginUser,
     refreshAccessToken,
-    getMe
+    getMe,
+    deposit,
+    withdrawal
 };
