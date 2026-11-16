@@ -1,1 +1,92 @@
 $kind: collection
+variables:
+  - key: json_web_token_110l
+    secret: true
+    disabled: false
+    source:
+      provider: postman
+      postman:
+        type: cloud
+        secretId: 49b20f08-b2ec-4793-a4b7-96534b2f519a
+        vaultId: 2fc72f47-0b8e-45f1-bd78-ddc00026669c
+  - key: json_web_token_0b31
+    secret: true
+    disabled: false
+    source:
+      provider: postman
+      postman:
+        type: cloud
+        secretId: 890d7cf0-a0c8-4c8d-90f4-45c485bac02c
+        vaultId: 2fc72f47-0b8e-45f1-bd78-ddc00026669c
+  - key: json_web_token_184d
+    secret: true
+    disabled: false
+    source:
+      provider: postman
+      postman:
+        type: cloud
+        secretId: 93104eb8-b819-4cf2-959a-23fe471de780
+        vaultId: 2fc72f47-0b8e-45f1-bd78-ddc00026669c
+  - key: json_web_token_1cdc
+    secret: true
+    disabled: false
+    source:
+      provider: postman
+      postman:
+        type: cloud
+        secretId: 2a44fc96-dbbe-4651-be96-a53628c3355c
+        vaultId: 2fc72f47-0b8e-45f1-bd78-ddc00026669c
+  - key: json_web_token_0zh5
+    secret: true
+    disabled: false
+    source:
+      provider: postman
+      postman:
+        type: cloud
+        secretId: 6b266213-2f74-4c58-852d-b08c0494f01e
+        vaultId: 2fc72f47-0b8e-45f1-bd78-ddc00026669c
+  - key: json_web_token_0y84
+    secret: true
+    disabled: false
+    source:
+      provider: postman
+      postman:
+        type: cloud
+        secretId: 832b8667-ac72-4824-be56-c1224b2a506e
+        vaultId: 2fc72f47-0b8e-45f1-bd78-ddc00026669c
+  - key: json_web_token_00dg
+    secret: true
+    disabled: false
+    source:
+      provider: postman
+      postman:
+        type: cloud
+        secretId: 3805bcb6-f9c7-46d5-ac97-4e0610da597d
+        vaultId: 2fc72f47-0b8e-45f1-bd78-ddc00026669c
+  - key: json_web_token_0h59
+    secret: true
+    disabled: false
+    source:
+      provider: postman
+      postman:
+        type: cloud
+        secretId: f28a7817-8bb4-4674-95fb-4d1828797407
+        vaultId: 2fc72f47-0b8e-45f1-bd78-ddc00026669c
+  - key: json_web_token_1bck
+    secret: true
+    disabled: false
+    source:
+      provider: postman
+      postman:
+        type: cloud
+        secretId: 0b293f28-c23b-4359-81b7-69a047ac5118
+        vaultId: 2fc72f47-0b8e-45f1-bd78-ddc00026669c
+  - key: json_web_token_0o7r
+    secret: true
+    disabled: false
+    source:
+      provider: postman
+      postman:
+        type: cloud
+        secretId: a9691d0f-e879-4e75-8633-9bda98d116e6
+        vaultId: 2fc72f47-0b8e-45f1-bd78-ddc00026669c

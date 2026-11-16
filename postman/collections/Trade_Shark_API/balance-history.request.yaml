@@ -1,0 +1,9 @@
+$kind: http-request
+description: ""
+url: http://localhost:3636/api/user/balance-history
+method: GET
+auth:
+  type: bearer
+  credentials:
+    token: "{{json_web_token_00dg}}"
+order: 14000

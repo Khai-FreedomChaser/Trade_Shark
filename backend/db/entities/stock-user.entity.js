@@ -20,6 +20,13 @@ module.exports = new EntitySchema({
             type: "int",
         },
 
+        averagePrice: {
+            type: "decimal",
+            precision: 15,
+            scale: 2,
+            default: 0
+        },
+
         createdAt: {
             type: "datetime",
         },

@@ -1,0 +1,18 @@
+$kind: http-request
+description: ""
+url: http://localhost:3636/api/user/trade/buy
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"symbol\": \"YNW\",\r
+
+    \  \"quantity\": 10\r
+
+    }"
+auth:
+  type: bearer
+  credentials:
+    token: "{{json_web_token_0y84}}"
+order: 12000

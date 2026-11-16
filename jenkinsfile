@@ -2,7 +2,6 @@ pipeline {
   agent any
 
   tools {
-    // Thay bằng đúng tên NodeJS installation đã cấu hình trong Jenkins
     nodejs 'Node24'
   }
 

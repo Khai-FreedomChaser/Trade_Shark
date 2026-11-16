@@ -1,0 +1,12 @@
+$kind: http-request
+description: ""
+url: http://localhost:3636/api/user/balance/withdrawal
+method: POST
+body:
+  type: json
+  content: "{\r\n  \"amount\": 90000\r\n}"
+auth:
+  type: bearer
+  credentials:
+    token: "{{json_web_token_0zh5}}"
+order: 11000
