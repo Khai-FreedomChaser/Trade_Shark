@@ -37,6 +37,7 @@
 | GET | `/api/stock` | Danh sách mã (đã có) |
 | GET | `/api/stock/:id` | Chi tiết 1 mã (đã có) |
 | GET | `/api/stock/:id/snapshots` | **Cần viết:** chuỗi snapshot cho biểu đồ, query `?limit=100&from=<ISO>&to=<ISO>`, sort `createdAt ASC` → `{ count, data: [{ id, stockId, minPrice, maxPrice, closePrice, createdAt }] }` |
+| GET | `/api/stock/:id/range` | Đáy/Đỉnh cả phiên tính từ **chuỗi snapshot đã lưu** (áp dụng thuật toán Min–Max ghép cặp trên dữ liệu thật), query `?from=<ISO>&to=<ISO>` → `{ symbol, count, low: { value, comparisons: { sequential, pairwise } }, high: {...}, totalComparisons: { sequential, pairwise, saved, savedPercent } }` |
 | POST/PUT/DELETE | `/api/stock` | CRUD admin (đã có) |
 
 > Lưu ý: `Stock` nhận diện bằng `id` (varchar 20), không phải `symbol`.

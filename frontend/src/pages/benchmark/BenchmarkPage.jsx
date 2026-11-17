@@ -135,7 +135,7 @@ export default function BenchmarkPage() {
             </div>
 
             <div className="bench-chart">
-              <h3>Thời gian CPU trung bình (ms, nhanh hơn = tốt hơn)</h3>
+              <h3>Thời gian chạy trung bình (ms, nhanh hơn = tốt hơn)</h3>
               <ResponsiveContainer width="100%" height={240}>
                 <BarChart data={toChartData(latest)}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#1e2a3a" />
@@ -151,6 +151,11 @@ export default function BenchmarkPage() {
           <p className="bench-note">
             Lý thuyết: tuần tự = 2(n−1) = {latest.detail ? (2 * (latest.datasetSize - 1)).toLocaleString("vi-VN") : "—"} phép so ·
             ghép cặp = 3n/2 − 2 = {latest.detail ? (1.5 * latest.datasetSize - 2).toLocaleString("vi-VN") : "—"} phép so.
+          </p>
+          <p className="bench-note">
+            Nhanh nhất trong {latest.detail?.runs ?? "?"} lượt: tuần tự {latest.detail?.seqBestTimeMs ?? "—"} ms ·
+            ghép cặp {latest.detail?.pairBestTimeMs ?? "—"} ms. Số phép so sánh không đổi giữa các lượt và giữa các máy;
+            thời gian đo bằng đồng hồ đơn điệu (không phải CPU time) nên phụ thuộc máy, JIT và mẫu dữ liệu.
           </p>
         </div>
       )}

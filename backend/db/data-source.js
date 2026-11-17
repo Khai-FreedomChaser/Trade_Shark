@@ -1,6 +1,6 @@
-// override: true — backend/.env là nguồn cấu hình khi chạy local; biến MYSQL_* lỡ
-// có sẵn trong shell/harness không được phép ghi đè thông tin kết nối DB.
-require("dotenv").config({ override: true });
+// .env chỉ điền các biến CHƯA có trong môi trường: biến môi trường thật luôn thắng
+// (vd `SIM_ENABLED=false npm run dev` hoặc biến do CI/deploy set) — đúng chuẩn 12-factor.
+require("dotenv").config();
 const { DataSource } = require("typeorm");
 
 module.exports = new DataSource({
