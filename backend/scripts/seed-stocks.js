@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config({ override: true });
 const datasource = require("../db/data-source");
 const { genId } = require("../utils/id");
 

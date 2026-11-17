@@ -12,6 +12,10 @@ npm run dev
 
 Cần backend đang chạy (`npm run dev` trong thư mục `backend/`) — иначе mọi trang sẽ báo lỗi kết nối.
 
+Không còn lớp mock: mọi trang (bảng điện, chi tiết mã, benchmark, danh mục/giao dịch/cảnh báo) đọc
+và ghi trực tiếp vào backend thật qua `services/api.js` + `services/ws.js` theo `docs/CONTRACT.md`.
+Tài khoản phải đăng ký trước ở `/login?mode=register` rồi nạp tiền để giao dịch.
+
 ## Cấu trúc
 
 ```text

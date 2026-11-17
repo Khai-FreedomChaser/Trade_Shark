@@ -11,8 +11,8 @@ export default function BalanceModal({ mode, user, busy, error, onClose, onSubmi
   function submit(event) {
     event.preventDefault();
     const value = Number(amount);
-    if (!Number.isFinite(value) || value <= 0) {
-      setValidationError("Số tiền phải lớn hơn 0");
+    if (!Number.isFinite(value) || value < 1000) {
+      setValidationError("Số tiền tối thiểu 1.000 VND");
       return;
     }
     if (!isDeposit && value > user.balance) {
@@ -44,7 +44,7 @@ export default function BalanceModal({ mode, user, busy, error, onClose, onSubmi
           <input
             id="balance-amount"
             type="number"
-            min="1"
+            min="1000"
             step="1000"
             inputMode="numeric"
             value={amount}

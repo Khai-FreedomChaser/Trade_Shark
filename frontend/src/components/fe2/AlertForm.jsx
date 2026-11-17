@@ -67,6 +67,6 @@ export default function AlertForm({ alerts, marketSymbols = [], onSave, onDelete
       <button className="secondary-button" type="submit" disabled={busy}>Lưu cảnh báo</button>
     </form>
     {error && <p className="form-error">{error}</p>}
-    {alerts.length === 0 ? <p className="empty-state">Chưa cài cảnh báo nào.</p> : <div className="alert-list">{alerts.map((alert) => <div className="alert-row" key={`${alert.stockId || alert.symbol}-${alert.createdAt}`}><strong>{alert.symbol}</strong><span>Thấp: {alert.alertMin ? formatPrice(alert.alertMin) : "-"}</span><span>Cao: {alert.alertMax ? formatPrice(alert.alertMax) : "-"}</span><button className="danger-button" type="button" onClick={() => onDelete(alert)} disabled={busy}>Xóa</button></div>)}</div>}
+    {alerts.length === 0 ? <p className="empty-state">Chưa cài cảnh báo nào.</p> : <div className="alert-list">{alerts.map((alert) => <div className="alert-row" key={alert.stockId || alert.symbol}><strong>{alert.symbol}</strong><span>Thấp: {alert.alertMin ? formatPrice(alert.alertMin) : "-"}</span><span>Cao: {alert.alertMax ? formatPrice(alert.alertMax) : "-"}</span><button className="danger-button" type="button" onClick={() => onDelete(alert)} disabled={busy}>Xóa</button></div>)}</div>}
   </section>;
 }

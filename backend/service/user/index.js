@@ -447,13 +447,33 @@ async function getBalanceHistory(userId) {
     order: { createdAt: "DESC" }
   });
 
-  return history.map((item) => ({
-    id: item.id,
-    stockId: item.stockId,
-    amount: Number(item.amount),
-    type: item.type,
-    createdAt: item.createdAt
-  }));
+  const user = await getUserRepository().findOneBy({ id: userId });
+
+  if (!user) {
+    throw createError("Người dùng không tồn tại", 404);
+  }
+
+  // Số dư sau mỗi giao dịch = đi ngược từ số dư hiện tại (bản ghi mới nhất trước).
+  // Loại 'withdrawal' lưu amount dương nhưng là khoản trừ; 'trade' đã lưu kèm dấu (mua âm, bán dương).
+  let runningCents = Math.round(Number(user.balance ?? 0) * 100);
+
+  return history.map((item) => {
+    const amount = Number(item.amount);
+    const deltaCents = Math.round(
+      (item.type === "withdrawal" ? -Math.abs(amount) : amount) * 100
+    );
+    const balanceAfterCents = runningCents;
+    runningCents -= deltaCents;
+
+    return {
+      id: item.id,
+      stockId: item.stockId,
+      amount,
+      balanceAfter: balanceAfterCents / 100,
+      type: item.type,
+      createdAt: item.createdAt
+    };
+  });
 }
 
 async function getPortfolio(userId) {

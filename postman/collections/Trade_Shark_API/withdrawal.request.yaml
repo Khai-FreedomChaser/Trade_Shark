@@ -1,6 +1,6 @@
 $kind: http-request
 description: ""
-url: http://localhost:3636/api/user/balance/withdrawal
+url: http://localhost:3636/api/user/balance/withdraw
 method: POST
 body:
   type: json
