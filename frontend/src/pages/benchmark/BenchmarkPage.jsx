@@ -34,6 +34,7 @@ export default function BenchmarkPage() {
   const [error, setError] = useState(null);
   const [latest, setLatest] = useState(null);
   const [logs, setLogs] = useState([]);
+  const [live, setLive] = useState(null);
 
   // Lịch sử thực nghiệm cũ (đã lưu trong DB) — vẽ được ngay khi mở trang
   useEffect(() => {
@@ -41,6 +42,23 @@ export default function BenchmarkPage() {
       .benchmarkLogs(50)
       .then((res) => setLogs(res.data || []))
       .catch(() => {});
+  }, []);
+
+  // Minh chứng thực nghiệm của CHÍNH hệ thống đang chạy: số phép so sánh mà
+  // snapshot-writer tiết kiệm nhờ ghép cặp + cache cảnh báo (GET /api/market/stats)
+  useEffect(() => {
+    let cancelled = false;
+
+    function load() {
+      api
+        .marketStats()
+        .then((data) => { if (!cancelled) setLive(data); })
+        .catch(() => { if (!cancelled) setLive(null); });
+    }
+
+    load();
+    const timer = setInterval(load, 5000);
+    return () => { cancelled = true; clearInterval(timer); };
   }, []);
 
   async function runBenchmark() {
@@ -157,6 +175,60 @@ export default function BenchmarkPage() {
             ghép cặp {latest.detail?.pairBestTimeMs ?? "—"} ms. Số phép so sánh không đổi giữa các lượt và giữa các máy;
             thời gian đo bằng đồng hồ đơn điệu (không phải CPU time) nên phụ thuộc máy, JIT và mẫu dữ liệu.
           </p>
+        </div>
+      )}
+
+      {live && (
+        <div className="bench-history">
+          <h2>Số liệu từ hệ thống đang chạy (đo thật, không phải dữ liệu sinh để đo)</h2>
+          <p className="bench-note">
+            Snapshot-writer gom giá của mỗi cửa sổ rồi tìm đồng thời Min–Max bằng <strong>kỹ thuật ghép cặp</strong> thay
+            cho việc so sánh từng tick với min/max. Bảng dưới là số liệu tích luỹ kể từ lúc backend khởi động.
+          </p>
+          <table className="bench-table">
+            <thead>
+              <tr>
+                <th>Chỉ số</th>
+                <th className="right">Giá trị</th>
+                <th>Ghi chú</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Mã cổ phiếu trong RAM</td><td className="right">{live.symbols.toLocaleString("vi-VN")}</td><td>đang được theo dõi realtime</td></tr>
+              <tr><td>Cửa sổ snapshot đã gộp</td><td className="right">{live.windowAggregation.windows.toLocaleString("vi-VN")}</td><td>mỗi {Math.round(live.windowAggregation.intervalMs / 1000)}s một cửa sổ</td></tr>
+              <tr><td>Dòng snapshot đã ghi</td><td className="right">{live.windowAggregation.rows.toLocaleString("vi-VN")}</td><td>{live.windowAggregation.ticks.toLocaleString("vi-VN")} giá đã gộp</td></tr>
+              <tr>
+                <td>Phép so sánh nếu duyệt tuần tự (2(n−1))</td>
+                <td className="right">{live.windowAggregation.sequentialComparisons.toLocaleString("vi-VN")}</td>
+                <td>cách cũ, so từng tick với min rồi với max</td>
+              </tr>
+              <tr>
+                <td>Phép so sánh thực tế khi ghép cặp</td>
+                <td className="right">{live.windowAggregation.pairwiseComparisons.toLocaleString("vi-VN")}</td>
+                <td>đếm trực tiếp trong lúc chạy</td>
+              </tr>
+              <tr>
+                <td>Tiết kiệm</td>
+                <td className="right">{live.windowAggregation.savedComparisons.toLocaleString("vi-VN")} ({live.windowAggregation.savedPercent}%)</td>
+                <td>cùng dữ liệu, cùng kết quả Min–Max</td>
+              </tr>
+              <tr>
+                <td>Tự kiểm chứng 2 thuật toán</td>
+                <td className="right">{live.windowAggregation.mismatches === 0 ? "0 lệch" : `${live.windowAggregation.mismatches} lệch`}</td>
+                <td>{live.windowAggregation.selfCheck ? "đang chạy thuật toán tuần tự song song để so kết quả" : "bật MINMAX_SELFCHECK=true để chạy song song"}</td>
+              </tr>
+              <tr>
+                <td>Cập nhật đáy/đỉnh phiên mỗi tick</td>
+                <td className="right">{live.streamUpdate.comparisonsPerTick} phép/tick</td>
+                <td>chặn dưới khi chỉ có 1 giá trị mới (không quét mảng)</td>
+              </tr>
+              <tr>
+                <td>Cache cảnh báo trong RAM</td>
+                <td className="right">{live.alertCache.cachedAlerts.toLocaleString("vi-VN")} cảnh báo</td>
+                <td>{live.alertCache.dbReads} lần đọc DB · {live.alertCache.ticksChecked.toLocaleString("vi-VN")} tick đã dò trong RAM</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       )}
 

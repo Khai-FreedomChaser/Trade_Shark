@@ -29,6 +29,8 @@ export const api = {
   // --- Market (RAM, trạng thái hiện tại) ---
   marketState: () => request("/api/market/state"),
   symbolState: (symbol) => request(`/api/market/state/${symbol}`),
+  // Số liệu tối ưu hoá runtime (Min-Max ghép cặp, cache cảnh báo)
+  marketStats: () => request("/api/market/stats"),
 
   // --- Stock (DB master data + snapshots) ---
   stocks: () => request("/api/stock"),

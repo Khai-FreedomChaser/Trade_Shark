@@ -30,6 +30,7 @@
 | --- | --- | --- |
 | GET | `/api/market/state` | Toàn bộ trạng thái hiện tại (bootstrap bảng điện) → `{ count, data: [TickPayload...] }` |
 | GET | `/api/market/state/:symbol` | Trạng thái 1 mã, 404 nếu không có |
+| GET | `/api/market/stats` | **Minh chứng thực nghiệm runtime:** số mã trong RAM, thống kê gộp cửa sổ snapshot (`windowAggregation`: số cửa sổ/dòng/giá, phép so sánh tuần tự vs ghép cặp, % tiết kiệm, self-check), cache cảnh báo (`alertCache`: số lần đọc DB, tick đã dò) |
 
 ### 3.2 Stock — master data DB (`routes/stock`) — *BE1 (Nguyệt)*
 | Method | Path | Mô tả |
@@ -127,9 +128,17 @@ Simulator (BE1, random walk)
 marketState (RAM, service/market/market-state.js)  ← NGUỒN SỰ THẬT CỦA PHIÊN
       │  emit "tick"
       ├──▶ ws/index.js ──batch 500ms──▶ {type:"ticks"} → Bảng điện (FE1)
-      ├──▶ alert listener (BE2 tự viết) ──▶ ws.broadcastAlert() → FE2  (Toast)
-      └──▶ snapshot-writer ──batch 60s──▶ DB.stock_snapshots → Biểu đồ mã (FE1)
+      ├──▶ alert listener (BE2) ──đọc cảnh báo từ RAM──▶ ws.broadcastAlert() → FE2  (Toast)
+      └──▶ snapshot-writer ──gom giá 60s + GHÉP CẶP Min–Max──▶ DB.stock_snapshots → Biểu đồ mã (FE1)
+                                                                └──▶ GET /api/stock/:id/range (đáy/đỉnh đã lưu)
 ```
+
+- **Áp dụng thuật toán:** thay vì 2 phép so sánh mỗi tick, `snapshot-writer` gom các giá
+  của cửa sổ rồi tìm đồng thời Min–Max bằng **ghép cặp** (`service/benchmark/algorithms.js`),
+  tức `3n/2 − 2` (n chẵn) hoặc `3(n−1)/2` (n lẻ) ~ **giảm 25% phép so sánh** cho cùng công việc báo cáo.
+- Số liệu đối chiếu của cả hai cách được đếm thật và phơi ra ở `GET /api/market/stats`.
+- Đáy/đỉnh **phiên** hiển thị tức thời vẫn là cập nhật tăng dần 2 phép so sánh/tick
+  (chặn dưới khi chỉ có 1 giá trị mới) — không phải quét mảng, nên không thay bằng ghép cặp được.
 
 - **Không module nào tự ghi giá vào DB.** DB chỉ nhận snapshot theo lô + nghiệp vụ.
 - Restart server: RAM được nạp lại từ `stocks` (refPrice) — dữ liệu snapshot cũ dùng để vẽ lịch sử, không phục hồi giá phiên.

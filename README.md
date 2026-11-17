@@ -17,6 +17,22 @@ Mọi luồng số liệu phức tạp sau đó được bọc gọn trong một
 - Frontend: React 19 + Vite + React Router + Recharts
 - Backend: Node.js + Express + WebSocket (ws) + TypeORM + MySQL
 
+## Tối ưu hoá đã triển khai trên hệ thống thật
+
+Số liệu đối chiếu sống ở `GET /api/market/stats` (và hiển thị ngay trên trang Benchmark).
+
+- **Thuật toán Min–Max ghép cặp chạy trên đường dữ liệu thật:** `snapshot-writer` gom giá của
+  từng cửa sổ (`SNAPSHOT_INTERVAL_MS`, mặc định 60s) rồi tìm đồng thời Min–Max bằng **ghép cặp**
+  (`3n/2 − 2` với n chẵn, `3(n−1)/2` với n lẻ) thay cho việc so từng tick với min/max (`2(n−1)`)
+  → **giảm ~25% phép so sánh** cho cùng một công việc báo cáo biến động.
+- **Đáy/Đỉnh đã lưu (sống sót sau restart):** `GET /api/stock/:id/range` tổng hợp từ chuỗi snapshot
+  trong DB và trả luôn số phép so sánh của cả hai thuật toán (có tự kiểm chứng kết quả khớp nhau).
+- **Cache cảnh báo trong RAM:** đường nóng không còn truy vấn `stock_alerts` mỗi tick
+  (trước đây ≈450 truy vấn/giây với 3.000 mã, tỉ lệ tick 15%); cache được làm mới định kỳ và ngay
+  khi người dùng lưu/xoá cảnh báo.
+- Đáy/Đỉnh **phiên** hiển thị tức thời vẫn là 2 phép so sánh/tick — chặn dưới khi chỉ có một giá
+  trị mới, không phải quét mảng, nên không thể thay bằng ghép cặp.
+
 ## Cấu trúc dự án
 
 ```text
