@@ -29,11 +29,21 @@ export const api = {
   // --- Market (RAM, trạng thái hiện tại) ---
   marketState: () => request("/api/market/state"),
   symbolState: (symbol) => request(`/api/market/state/${symbol}`),
+  // Số liệu tối ưu hoá runtime (Min-Max ghép cặp, cache cảnh báo)
+  marketStats: () => request("/api/market/stats"),
 
   // --- Stock (DB master data + snapshots) ---
   stocks: () => request("/api/stock"),
   snapshots: (stockId, { limit = 100 } = {}) =>
     request(`/api/stock/${stockId}/snapshots?limit=${limit}`),
+  // Đáy/Đỉnh từ chuỗi snapshot đã lưu (backend dùng thuật toán Min-Max ghép cặp)
+  snapshotRange: (stockId, { from, to } = {}) => {
+    const params = new URLSearchParams();
+    if (from) params.set("from", from);
+    if (to) params.set("to", to);
+    const query = params.toString();
+    return request(`/api/stock/${stockId}/range${query ? `?${query}` : ""}`);
+  },
 
   // --- Benchmark ---
   benchmarkRun: ({ size, pattern, runs }) =>

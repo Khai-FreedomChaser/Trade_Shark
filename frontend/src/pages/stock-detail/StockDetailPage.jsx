@@ -21,6 +21,7 @@ export default function StockDetailPage() {
   const [state, setState] = useState(null);
   const [snapshots, setSnapshots] = useState(null);
   const [snapError, setSnapError] = useState(null);
+  const [range, setRange] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [loadingSnap, setLoadingSnap] = useState(false);
   const [prevSymbol, setPrevSymbol] = useState(symbol);
@@ -31,6 +32,7 @@ export default function StockDetailPage() {
     setState(null);
     setSnapshots(null);
     setSnapError(null);
+    setRange(null);
     setNotFound(false);
     setLoadingSnap(false);
   }
@@ -53,6 +55,17 @@ export default function StockDetailPage() {
       });
   }, []);
 
+  // Đáy/Đỉnh cả phiên từ snapshot đã lưu (backend chạy thuật toán Min-Max ghép cặp).
+  // Backend bản cũ chưa có endpoint này -> ẩn thẻ, không làm hỏng trang.
+  const loadRange = useCallback((stockId) => {
+    if (!stockId) return;
+
+    api
+      .snapshotRange(stockId)
+      .then((data) => setRange(data))
+      .catch(() => setRange(null));
+  }, []);
+
   // 1) Lấy thông tin mã từ RAM
   useEffect(() => {
     let cancelled = false;
@@ -63,6 +76,7 @@ export default function StockDetailPage() {
         if (cancelled) return;
         setState(data);
         loadSnapshots(data.stockId);
+        loadRange(data.stockId);
       })
       .catch(() => {
         if (!cancelled) setNotFound(true);
@@ -71,7 +85,7 @@ export default function StockDetailPage() {
     return () => {
       cancelled = true;
     };
-  }, [symbol, loadSnapshots]);
+  }, [symbol, loadSnapshots, loadRange]);
 
   // 2) Lắng nghe tick real-time của mã này để cập nhật giá trên header
   useEffect(() => {
@@ -198,6 +212,27 @@ export default function StockDetailPage() {
           <span className="stat-label">Thấp nhất phiên</span>
           <span className="stat-value">{formatPrice(state.low)}</span>
         </div>
+        {range?.count > 0 && (
+          <>
+            <div className="stat-card">
+              <span className="stat-label">Đáy lưu trong DB ({range.count} mốc)</span>
+              <span className="stat-value">{formatPrice(range.low.value)}</span>
+            </div>
+            <div className="stat-card">
+              <span className="stat-label">Đỉnh lưu trong DB ({range.count} mốc)</span>
+              <span className="stat-value">{formatPrice(range.high.value)}</span>
+            </div>
+            <div className="stat-card">
+              <span
+                className="stat-value flat"
+                title={`Tuần tự ${range.totalComparisons.sequential} phép · Ghép cặp ${range.totalComparisons.pairwise} phép`}
+              >
+                −{range.totalComparisons.saved} ({range.totalComparisons.savedPercent}%)
+              </span>
+              <span className="stat-label">Phép so sánh tiết kiệm nhờ ghép cặp</span>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Biểu đồ biến động từ Snapshots DB */}
@@ -206,7 +241,7 @@ export default function StockDetailPage() {
           <h2>Biến động phiên (Đỉnh - Đáy - Đóng theo chu kỳ snapshot)</h2>
           <button
             className="btn-refresh"
-            onClick={() => loadSnapshots(state.stockId)}
+            onClick={() => { loadSnapshots(state.stockId); loadRange(state.stockId); }}
             disabled={loadingSnap}
           >
             {loadingSnap ? "Đang tải…" : "↻ Làm mới biểu đồ"}

@@ -4,8 +4,12 @@ const { findMinMaxSequential, findMinMaxPairwise } = require("./algorithms");
 
 /**
  * MODULE BENCHMARK — chạy thực nghiệm đối chiếu 2 thuật toán trên nhiều kích
- * thước/mẫu dữ liệu giá giả lập, đo CPU time bằng process.hrtime.bigint(),
- * đếm phép so sánh, lưu kết quả vào benchmark_logs.
+ * thước/mẫu dữ liệu giá giả lập, đo THỜI GIAN CHẠY bằng process.hrtime.bigint()
+ * (đồng hồ đơn điệu, không phải CPU time), đếm phép so sánh, lưu vào benchmark_logs.
+ *
+ * Lưu ý khi đọc kết quả: số phép so sánh là hằng số theo n và mẫu dữ liệu (nên là
+ * số liệu đối chiếu chính), còn thời gian phụ thuộc máy + JIT + dự đoán nhánh nên
+ * có thể nhanh hơn hoặc chậm hơn tuỳ mẫu dữ liệu.
  */
 
 const PATTERNS = ["random", "sorted", "reversed", "few-unique", "nearly-sorted"];

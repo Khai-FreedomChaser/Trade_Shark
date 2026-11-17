@@ -611,6 +611,9 @@ async function saveUserAlert(userId, data) {
 
   const saved = await alertRepository.save(alert);
 
+  // Cache cảnh báo trong RAM (alert-listener) phải thấy thay đổi ngay, không chờ làm mới định kỳ
+  await require("./alert-listener").reloadAlerts();
+
   return {
     stockId: stock.id,
     symbol: stock.symbol,
@@ -649,6 +652,9 @@ async function deleteUserAlert(userId, data) {
   if (!result.affected) {
     throw createError("Không tìm thấy cảnh báo của cổ phiếu này", 404);
   }
+
+  // Cache cảnh báo trong RAM (alert-listener) phải thấy thay đổi ngay
+  await require("./alert-listener").reloadAlerts();
 
   return { message: "Đã xóa alert", stockId: stock.id, symbol: stock.symbol };
 }

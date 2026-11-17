@@ -129,11 +129,55 @@ async function getStockSnapshots(req, res) {
   }
 }
 
+/**
+ * GET /api/stock/:id/range — Đáy/Đỉnh tính từ chuỗi snapshot ĐÃ LƯU (thuật toán
+ * Min–Max ghép cặp chạy trên dữ liệu thật) + số phép so sánh của cả 2 thuật toán.
+ * Query: ?from=<ISO>&to=<ISO> (tuỳ chọn).
+ */
+async function getStockRange(req, res) {
+  try {
+    const from = parseDateParam(req.query.from);
+    const to = parseDateParam(req.query.to);
+    if (!from.ok || !to.ok) {
+      return res.status(400).json({
+        message: "Tham số from/to phải là thời gian ISO (vd 2026-11-15T09:00:00Z)",
+        error: "Invalid date"
+      });
+    }
+    if (from.date && to.date && from.date > to.date) {
+      return res.status(400).json({
+        message: "from phải nhỏ hơn hoặc bằng to",
+        error: "Invalid range"
+      });
+    }
+
+    const stock = await stockService.getStockById(req.params.id);
+    if (!stock) {
+      return res.status(404).json({
+        message: "Không tìm thấy stock"
+      });
+    }
+
+    const result = await stockService.getSnapshotMinMax(req.params.id, {
+      from: from.date,
+      to: to.date
+    });
+
+    res.status(200).json({ symbol: stock.symbol, ...result });
+  } catch (error) {
+    res.status(500).json({
+      message: "Không thể tổng hợp Min-Max từ snapshot",
+      error: error.message
+    });
+  }
+}
+
 module.exports = {
   createStock,
   getAllStocks,
   getStockById,
   updateStock,
   deleteStock,
-  getStockSnapshots
+  getStockSnapshots,
+  getStockRange
 };

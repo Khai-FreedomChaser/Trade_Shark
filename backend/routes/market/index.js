@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.get("/state", marketController.getMarketState);
 router.get("/state/:symbol", marketController.getSymbolState);
+router.get("/stats", marketController.getOptimizationStats);
 
 module.exports = router;
