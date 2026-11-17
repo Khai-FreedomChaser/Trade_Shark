@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config({ override: true });
 const { spawnSync } = require("child_process");
 const mysql = require("mysql2/promise");
 

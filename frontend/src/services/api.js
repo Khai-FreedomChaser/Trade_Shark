@@ -1,14 +1,15 @@
 import { API_URL } from "../config";
+import { getAccessToken } from "./authStorage";
 
 async function request(path, options = {}) {
-  const accessToken = localStorage.getItem("accessToken");
+  const accessToken = getAccessToken();
   const res = await fetch(`${API_URL}${path}`, {
+    ...options,
     headers: {
       "Content-Type": "application/json",
       ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
       ...options.headers
-    },
-    ...options
+    }
   });
 
   const data = await res.json().catch(() => null);
@@ -79,8 +80,9 @@ export const api = {
     method: "POST",
     body: JSON.stringify(payload)
   }),
-  deleteAlert: ({ stockId, symbol }) => request(
-    `/api/user/alerts?${stockId ? `stockId=${encodeURIComponent(stockId)}` : `symbol=${encodeURIComponent(symbol)}`}`,
-    { method: "DELETE" }
-  )
+  // Backend yêu cầu đúng một trong hai: stockId hoặc symbol (đọc từ body, xem service/user deleteUserAlert)
+  deleteAlert: ({ stockId, symbol }) => request("/api/user/alerts", {
+    method: "DELETE",
+    body: JSON.stringify(stockId ? { stockId } : { symbol })
+  })
 };

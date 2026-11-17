@@ -9,7 +9,8 @@ router.post("/login", userController.loginUser);
 router.post("/refresh", userController.refreshAccessToken);
 router.get("/me", authMiddleware, userController.getMe);
 router.post("/balance/deposit", authMiddleware, userController.deposit);
-router.post("/balance/withdrawal", authMiddleware, userController.withdrawal);
+// Path theo docs/CONTRACT.md mục 3.4 (FE gọi /balance/withdraw)
+router.post("/balance/withdraw", authMiddleware, userController.withdrawal);
 router.post("/trade/buy", authMiddleware, userController.buyStock);
 router.post("/trade/sell", authMiddleware, userController.sellStock);
 router.get("/balance-history", authMiddleware, userController.getBalanceHistory);

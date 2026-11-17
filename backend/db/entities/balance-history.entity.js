@@ -34,6 +34,7 @@ module.exports = new EntitySchema({
 
         createdAt: {
             type: 'datetime',
+            precision: 6,
         },
     },
     relations: {

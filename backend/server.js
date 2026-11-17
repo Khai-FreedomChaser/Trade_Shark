@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const { startAlertListener } = require("./service/user/alert-listener");
-require("dotenv").config();
+require("dotenv").config({ override: true });
 
 const datasource = require("./db/data-source");
 const { marketState, startSimulator, startSnapshotWriter } = require("./service/market");

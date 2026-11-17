@@ -7,8 +7,8 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [email, setEmail] = useState("manh@example.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [userName, setUserName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -44,7 +44,7 @@ export default function LoginPage() {
         <p className="auth-kicker">TRADE SHARK · FE2</p>
         <h1>{mode === "login" ? "Đăng nhập" : "Tạo tài khoản"}</h1>
         <p className="auth-subtitle">
-          {mode === "login" ? "Mở ví và quản lý danh mục của bạn." : "Tạo tài khoản demo để bắt đầu giao dịch."}
+          {mode === "login" ? "Mở ví và quản lý danh mục của bạn." : "Tạo tài khoản để bắt đầu giao dịch."}
         </p>
 
         <form className="auth-form" onSubmit={handleSubmit}>
@@ -56,11 +56,11 @@ export default function LoginPage() {
           )}
           <label>
             Email
-            <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
+            <input type="email" placeholder="ban@congty.vn" value={email} onChange={(event) => setEmail(event.target.value)} required />
           </label>
           <label>
             Mật khẩu
-            <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} required minLength={6} />
+            <input type="password" placeholder="Ít nhất 6 ký tự" value={password} onChange={(event) => setPassword(event.target.value)} required minLength={6} />
           </label>
           {error && <p className="auth-error">{error}</p>}
           <button className="primary-button" type="submit" disabled={loading}>
@@ -71,7 +71,6 @@ export default function LoginPage() {
         <button className="link-button" type="button" onClick={toggleMode}>
           {mode === "login" ? "Chưa có tài khoản? Đăng ký" : "Đã có tài khoản? Đăng nhập"}
         </button>
-        <p className="auth-hint">Demo: manh@example.com / 123456</p>
       </section>
     </main>
   );
